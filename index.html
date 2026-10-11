@@ -61,17 +61,22 @@
             </div>
 
             <!-- Global Role & Controls -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3">
                 <div class="hidden sm:flex items-center bg-slate-800/90 rounded-xl p-1 border border-slate-700">
                     <span class="text-xs text-slate-400 px-2 font-medium"><i class="fa-solid fa-user-gear mr-1"></i> Chế độ:</span>
-                    <button id="btnRoleStudent" onclick="setRole('student')" class="px-3 py-1 text-xs rounded-lg font-bold transition-all bg-cyan-600 text-white shadow-md">Học Sinh HSG</button>
-                    <button id="btnRoleTeacher" onclick="setRole('teacher')" class="px-3 py-1 text-xs rounded-lg font-bold transition-all text-slate-300 hover:text-white">Giáo Viên Hướng Dẫn</button>
+                    <button id="btnRoleStudent" onclick="switchUserRole('student')" class="px-3 py-1 text-xs rounded-lg font-bold transition-all bg-cyan-600 text-white shadow-md">Học Sinh HSG</button>
+                    <button id="btnRoleTeacher" onclick="switchUserRole('teacher')" class="px-3 py-1 text-xs rounded-lg font-bold transition-all text-slate-300 hover:text-white">Giáo Viên Hướng Dẫn</button>
                 </div>
 
-                <div class="relative">
+                <!-- User Profile & Status Widget -->
+                <div id="userProfileWidget" class="flex items-center space-x-2">
                     <span id="roleBadge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-cyan-950 text-cyan-300 border border-cyan-800">
-                        <i class="fa-solid fa-graduation-cap mr-1.5"></i> Học Sinh HSG
+                        <i class="fa-solid fa-graduation-cap mr-1.5"></i> <span id="userBadgeText">Học Sinh HSG</span>
                     </span>
+                    <button onclick="openAuthModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-check text-cyan-400"></i>
+                        <span id="btnAuthText">Đăng Nhập</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -105,7 +110,6 @@
 
         <!-- SECTION 1: THEORY / LÝ THUYẾT MÔN CÔNG NGHỆ CHUẨN SGK & HSG -->
         <section id="section-theory" class="tab-content block space-y-6">
-            <!-- Header Filter Card -->
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
@@ -114,7 +118,6 @@
                     <p class="text-sm text-slate-500 mt-1">Hệ thống hóa kiến thức Thiết kế Kỹ thuật, Cơ khí, Điện - Điện tử, Tự động hóa và Trí tuệ nhân tạo (AI) theo 4 mức độ nhận thức.</p>
                 </div>
                 
-                <!-- Grade Selector -->
                 <div class="flex items-center space-x-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
                     <span class="text-xs font-bold text-slate-600 pl-2"><i class="fa-solid fa-layer-group"></i> Khối Lớp:</span>
                     <button onclick="filterTheoryGrade(10)" id="theory-grade-10" class="theory-grade-btn px-4 py-2 text-xs font-extrabold rounded-lg bg-cyan-600 text-white shadow">Công Nghệ 10</button>
@@ -172,10 +175,9 @@
                     <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
                         <i class="fa-solid fa-list-check text-cyan-600"></i> Ngân Hàng Bài Tập Trắc Nghiệm HSG Công Nghệ
                     </h2>
-                    <p class="text-sm text-slate-500 mt-1">Hệ thống bài trắc nghiệm chuẩn cấu trúc thi Học Sinh Giỏi & Đề thi Quốc Gia mới (Ít nhất 10 đề mỗi khối lớp).</p>
+                    <p class="text-sm text-slate-500 mt-1">Hệ thống bài trắc nghiệm chuẩn cấu trúc thi Học Sinh Giỏi & Đề thi Quốc Gia mới.</p>
                 </div>
 
-                <!-- Grade Selector Widget -->
                 <div class="w-full md:w-auto bg-cyan-50 p-2 rounded-2xl border border-cyan-100 flex items-center justify-between md:justify-start space-x-2">
                     <span class="text-xs font-bold text-cyan-900 uppercase px-2"><i class="fa-solid fa-filter"></i> Khối:</span>
                     <button onclick="selectQuizGrade(10)" id="quiz-grade-tab-10" class="quiz-grade-btn flex-1 md:flex-none px-4 py-2 text-xs font-extrabold rounded-xl bg-cyan-600 text-white shadow-md transition">
@@ -194,24 +196,22 @@
             <div id="quiz-list-view" class="space-y-4">
                 <div class="flex items-center justify-between">
                     <h3 id="quiz-grade-title" class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                        <span class="w-3 h-3 rounded-full bg-cyan-600"></span> Danh Sách 10+ Bộ Đề Lớp 10
+                        <span class="w-3 h-3 rounded-full bg-cyan-600"></span> Danh Sách Bộ Đề Lớp 10
                     </h3>
                     <span id="quiz-count-badge" class="text-xs bg-slate-200 font-extrabold px-3 py-1 rounded-full text-slate-700">10 Bộ Đề</span>
                 </div>
 
-                <!-- Quiz Cards Grid -->
                 <div id="quiz-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <!-- Dynamic rendering of 10+ tests for current selected grade -->
+                    <!-- Dynamic rendering of tests for current selected grade -->
                 </div>
             </div>
 
             <!-- Active Quiz Player Container -->
             <div id="quiz-player" class="hidden bg-white rounded-2xl p-6 shadow-lg border border-slate-200 space-y-6">
-                <!-- Quiz Player Header -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 gap-3">
                     <div>
                         <span id="player-grade-badge" class="px-3 py-1 text-xs font-extrabold rounded-lg bg-cyan-100 text-cyan-800">Công Nghệ 10</span>
-                        <h3 id="player-title" class="text-xl font-black text-slate-900 mt-1">Đề Thi HSG Số 1: Thiết Kế Kỹ Thuật & Công Nghệ 4.0</h3>
+                        <h3 id="player-title" class="text-xl font-black text-slate-900 mt-1">Đề Thi HSG</h3>
                     </div>
                     <div class="flex items-center space-x-3">
                         <div class="bg-amber-50 text-amber-800 px-3.5 py-1.5 rounded-xl border border-amber-200 text-xs font-bold flex items-center gap-1.5">
@@ -240,150 +240,261 @@
                         </div>
 
                         <!-- Explanation Box -->
-                        <div id="player-explanation" class="hidden p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-sm">
-                            <p class="font-bold mb-1"><i class="fa-solid fa-lightbulb text-amber-500 mr-1.5"></i> Phân tích đáp án & Cơ sở kỹ thuật:</p>
-                            <p id="player-explanation-text">Lời giải chi tiết...</p>
+                        <div id="player-explanation" class="hidden p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-950 text-xs space-y-1">
+                            <div class="font-bold flex items-center gap-1.5 text-emerald-800">
+                                <i class="fa-solid fa-circle-check"></i> Giải thích & Cơ sở đáp án:
+                            </div>
+                            <p id="player-explanation-text" class="leading-relaxed">Chi tiết giải thích câu hỏi...</p>
                         </div>
 
-                        <!-- Bottom Controls -->
-                        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
-                            <button id="btn-prev-q" onclick="navigateQuiz(-1)" class="px-4 py-2 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                        <!-- Navigation Controls -->
+                        <div class="flex items-center justify-between pt-4 border-t border-slate-200">
+                            <button onclick="navigateQuiz(-1)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
                                 <i class="fa-solid fa-chevron-left mr-1"></i> Câu Trước
                             </button>
-                            <div class="space-x-2">
-                                <button id="btn-check-ans" onclick="checkCurrentAnswer()" class="px-4 py-2 text-xs font-bold text-cyan-700 bg-cyan-50 hover:bg-cyan-100 rounded-xl transition">
-                                    <i class="fa-solid fa-circle-check mr-1"></i> Kiểm Tra Đơn Câu
-                                </button>
-                                <button id="btn-next-q" onclick="navigateQuiz(1)" class="px-5 py-2 text-xs font-bold text-white bg-cyan-600 hover:bg-cyan-700 rounded-xl shadow transition">
-                                    Câu Tiếp <i class="fa-solid fa-chevron-right ml-1"></i>
-                                </button>
-                            </div>
+                            <button onclick="checkCurrentAnswer()" class="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl text-xs font-bold transition">
+                                <i class="fa-solid fa-lightbulb mr-1"></i> Xem Đáp Án & Hướng Dẫn
+                            </button>
+                            <button onclick="navigateQuiz(1)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+                                Câu Tiếp <i class="fa-solid fa-chevron-right ml-1"></i>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Question Grid Palette -->
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 h-fit space-y-4">
-                        <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider"><i class="fa-solid fa-grip mr-1"></i> Sơ Đồ Câu Hỏi</h4>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
+                        <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+                            <span>Sơ Đồ Câu Hỏi</span>
+                            <i class="fa-solid fa-grip"></i>
+                        </h4>
                         <div id="question-palette" class="grid grid-cols-5 gap-2">
-                            <!-- Palette buttons -->
+                            <!-- Rendered dynamically -->
                         </div>
-                        <button onclick="submitQuiz()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow transition mt-2">
-                            <i class="fa-solid fa-paper-plane mr-1.5"></i> Nộp Bài Hoàn Thành
+
+                        <button onclick="submitQuiz()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Nộp Bài Thi HSG
                         </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 3: BÀI TẬP TỰ LUẬN & ĐỀ THI HSG CÔNG NGHỆ -->
+        <!-- SECTION 3: TỰ LUẬN KỸ THUẬT & ĐỀ THI HSG -->
         <section id="section-essay" class="tab-content hidden space-y-6">
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
                     <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
-                        <i class="fa-solid fa-diagram-project text-cyan-600"></i> Bài Tập Tự Luận & Đề Thi HSG Công Nghệ
+                        <i class="fa-solid fa-diagram-project text-cyan-600"></i> Bài Tập Tự Luận Kỹ Thuật & Đề Thi HSG
                     </h2>
-                    <p class="text-sm text-slate-500 mt-1">Rèn luyện tư duy phân tích sơ đồ mạch, lập trình vi điều khiển, tính toán công suất và thiết kế giải pháp AI/IoT.</p>
+                    <p class="text-sm text-slate-500 mt-1">Tổng hợp các bài toán thiết kế kỹ thuật, phân tích mạch điện tử, động cơ và tự động hóa mức độ Vận Dụng Cao.</p>
                 </div>
+
                 <div class="flex items-center space-x-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
-                    <button onclick="filterEssayGrade(10)" id="essay-grade-10" class="essay-grade-btn px-3.5 py-1.5 text-xs font-extrabold rounded-lg bg-cyan-600 text-white">Lớp 10</button>
-                    <button onclick="filterEssayGrade(11)" id="essay-grade-11" class="essay-grade-btn px-3.5 py-1.5 text-xs font-extrabold rounded-lg text-slate-700">Lớp 11</button>
-                    <button onclick="filterEssayGrade(12)" id="essay-grade-12" class="essay-grade-btn px-3.5 py-1.5 text-xs font-extrabold rounded-lg text-slate-700">Lớp 12</button>
+                    <span class="text-xs font-bold text-slate-600 pl-2"><i class="fa-solid fa-layer-group"></i> Lớp:</span>
+                    <button onclick="filterEssayGrade(10)" id="essay-grade-10" class="essay-grade-btn px-4 py-2 text-xs font-extrabold rounded-lg bg-cyan-600 text-white shadow">Lớp 10</button>
+                    <button onclick="filterEssayGrade(11)" id="essay-grade-11" class="essay-grade-btn px-4 py-2 text-xs font-extrabold rounded-lg text-slate-700 hover:bg-white">Lớp 11</button>
+                    <button onclick="filterEssayGrade(12)" id="essay-grade-12" class="essay-grade-btn px-4 py-2 text-xs font-extrabold rounded-lg text-slate-700 hover:bg-white">Lớp 12</button>
                 </div>
             </div>
 
-            <!-- Essay Items Container -->
-            <div id="essay-container" class="space-y-6">
-                <!-- Dynamic essay cards -->
+            <div id="essay-list-container" class="space-y-4">
+                <!-- Injected dynamically -->
             </div>
         </section>
 
-        <!-- SECTION 4: QUẢN TRỊ GIÁO VIÊN (TEACHER PANEL) -->
+        <!-- SECTION 4: QUẢN TRỊ GIÁO VIÊN BIÊN SOẠN -->
         <section id="section-admin" class="tab-content hidden space-y-6">
-            <!-- Header Panel -->
-            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-cyan-950 text-white rounded-2xl p-6 shadow-xl space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <span class="bg-cyan-500/20 text-cyan-300 text-xs font-bold px-3 py-1 rounded-full border border-cyan-400/30">
-                            <i class="fa-solid fa-user-shield mr-1"></i> Trang Quản Lý Giáo Viên Công Nghệ
-                        </span>
-                        <h2 class="text-2xl font-black mt-2">Cấu Hình & Biên Tập Ngân Hàng HSG</h2>
-                        <p class="text-slate-300 text-sm mt-1">Tùy chỉnh phân quyền chỉnh sửa cho các nội dung Ma Trận SGK, Đề Trắc Nghiệm và Bài Tập HSG.</p>
-                    </div>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-purple-600"></i> Bảng Quản Trị Giáo Viên & Biên Soạn Đề Thi
+                    </h2>
+                    <p class="text-sm text-slate-500 mt-1">Thêm mới Ma trận kiến thức SGK, Câu hỏi trắc nghiệm và Đề tự luận cho từng khối lớp.</p>
                 </div>
-
-                <!-- Teacher Permission Selection Bar (Crucial Requirement) -->
-                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-cyan-300 mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders"></i> Lựa Chọn Mục Giáo Viên Có Thể Chỉnh Sửa Nội Dung:
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <!-- Option 1: Theory Edit Permission -->
-                        <label class="flex items-center p-3 rounded-xl bg-slate-800 border border-slate-700 hover:border-cyan-500 cursor-pointer transition">
-                            <input type="checkbox" id="permEditTheory" onchange="toggleTeacherPermissions()" class="w-4 h-4 text-cyan-600 rounded focus:ring-cyan-500 border-slate-600 bg-slate-900" checked>
-                            <div class="ml-3">
-                                <span class="text-sm font-bold text-white block">Ma Trận Lý Thuyết</span>
-                                <span class="text-xs text-slate-400">Cho phép biên tập tóm tắt SGK</span>
-                            </div>
-                        </label>
-
-                        <!-- Option 2: Multiple Choice Edit Permission -->
-                        <label class="flex items-center p-3 rounded-xl bg-slate-800 border border-slate-700 hover:border-cyan-500 cursor-pointer transition">
-                            <input type="checkbox" id="permEditQuiz" onchange="toggleTeacherPermissions()" class="w-4 h-4 text-cyan-600 rounded focus:ring-cyan-500 border-slate-600 bg-slate-900" checked>
-                            <div class="ml-3">
-                                <span class="text-sm font-bold text-white block">Bộ Đề Trắc Nghiệm</span>
-                                <span class="text-xs text-slate-400">Cho phép thêm/sửa câu hỏi HSG</span>
-                            </div>
-                        </label>
-
-                        <!-- Option 3: Essay Edit Permission -->
-                        <label class="flex items-center p-3 rounded-xl bg-slate-800 border border-slate-700 hover:border-cyan-500 cursor-pointer transition">
-                            <input type="checkbox" id="permEditEssay" onchange="toggleTeacherPermissions()" class="w-4 h-4 text-cyan-600 rounded focus:ring-cyan-500 border-slate-600 bg-slate-900" checked>
-                            <div class="ml-3">
-                                <span class="text-sm font-bold text-white block">Bài Tự Luận & Đề HSG</span>
-                                <span class="text-xs text-slate-400">Cho phép cập nhật sơ đồ & lời giải</span>
-                            </div>
-                        </label>
-                    </div>
+                <div class="bg-purple-50 text-purple-900 border border-purple-200 px-4 py-2 rounded-xl text-xs font-bold">
+                    <i class="fa-solid fa-user-shield text-purple-600 mr-1.5"></i> Tài Khoản Giáo Viên Đã Xác Thực
                 </div>
             </div>
 
-            <!-- Management Forms Container -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Sidebar Form Switcher -->
-                <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2">
-                    <h3 class="text-xs font-bold uppercase text-slate-400 px-3 py-1">Chức Năng Biên Tập</h3>
-                    <button onclick="switchAdminSubtab('theory')" id="admin-subtab-theory" class="admin-nav-btn w-full text-left px-4 py-3 text-sm font-bold rounded-xl bg-cyan-50 text-cyan-700 transition flex items-center justify-between">
-                        <span><i class="fa-solid fa-book mr-2"></i> Biên Tập Lý Thuyết SGK</span>
-                        <span id="badge-perm-theory" class="text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-normal">Được phép</span>
-                    </button>
-                    <button onclick="switchAdminSubtab('quiz')" id="admin-subtab-quiz" class="admin-nav-btn w-full text-left px-4 py-3 text-sm font-bold rounded-xl text-slate-600 hover:bg-slate-50 transition flex items-center justify-between">
-                        <span><i class="fa-solid fa-list-check mr-2"></i> Thêm Đề Trắc Nghiệm</span>
-                        <span id="badge-perm-quiz" class="text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-normal">Được phép</span>
-                    </button>
-                    <button onclick="switchAdminSubtab('essay')" id="admin-subtab-essay" class="admin-nav-btn w-full text-left px-4 py-3 text-sm font-bold rounded-xl text-slate-600 hover:bg-slate-50 transition flex items-center justify-between">
-                        <span><i class="fa-solid fa-diagram-project mr-2"></i> Đề Tự Luận HSG</span>
-                        <span id="badge-perm-essay" class="text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-normal">Được phép</span>
-                    </button>
+            <!-- Admin Forms Tabs -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                <div class="flex border-b border-slate-200 space-x-4">
+                    <button onclick="switchAdminSubtab('theory')" id="admin-subtab-theory" class="pb-3 text-xs font-extrabold text-purple-700 border-b-2 border-purple-600">Thêm Ma Trận SGK</button>
+                    <button onclick="switchAdminSubtab('quiz')" id="admin-subtab-quiz" class="pb-3 text-xs font-extrabold text-slate-500 hover:text-purple-700">Thêm Trắc Nghiệm HSG</button>
+                    <button onclick="switchAdminSubtab('essay')" id="admin-subtab-essay" class="pb-3 text-xs font-extrabold text-slate-500 hover:text-purple-700">Thêm Tự Luận Kỹ Thuật</button>
                 </div>
 
-                <!-- Admin Action Form Area -->
-                <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                    <div id="admin-editor-content">
-                        <!-- Dynamic Editor -->
+                <!-- Form 1: Theory Form -->
+                <form id="formAddTheory" onsubmit="handleAddTheory(event)" class="admin-form space-y-4 text-xs">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Khối Lớp SGK</label>
+                            <select id="admTheoryGrade" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+                                <option value="10">Công Nghệ 10</option>
+                                <option value="11">Công Nghệ 11</option>
+                                <option value="12">Công Nghệ 12</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Tên Chương/Chủ Đề</label>
+                            <input type="text" id="admTheoryChapter" required placeholder="Ví dụ: Chương 1: Thiết Kế Kỹ Thuật" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+                        </div>
                     </div>
-                </div>
+                    <div>
+                        <label class="font-bold text-slate-700 block mb-1">Tên Bài Học Trọng Tâm</label>
+                        <input type="text" id="admTheoryTitle" required placeholder="Ví dụ: Quy Trình Thiết Kế Kỹ Thuật Chuẩn 5 Bước" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <textarea id="admMatrix1" placeholder="Nội dung Mức 1: Nhận biết (40%)" class="p-2.5 border border-slate-300 rounded-xl font-medium h-20"></textarea>
+                        <textarea id="admMatrix2" placeholder="Nội dung Mức 2: Thông hiểu (30%)" class="p-2.5 border border-slate-300 rounded-xl font-medium h-20"></textarea>
+                        <textarea id="admMatrix3" placeholder="Nội dung Mức 3: Vận dụng (20%)" class="p-2.5 border border-slate-300 rounded-xl font-medium h-20"></textarea>
+                        <textarea id="admMatrix4" placeholder="Nội dung Mức 4: Vận dụng cao & HSG (10%)" class="p-2.5 border border-slate-300 rounded-xl font-medium h-20"></textarea>
+                    </div>
+                    <button type="submit" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-extrabold rounded-xl shadow transition">
+                        <i class="fa-solid fa-plus mr-1"></i> Lưu Ma Trận Kiến Thức Mới
+                    </button>
+                </form>
+
+                <!-- Form 2: Quiz Form -->
+                <form id="formAddQuiz" onsubmit="handleAddQuiz(event)" class="admin-form hidden space-y-4 text-xs">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Khối Lớp</label>
+                            <select id="admQuizGrade" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+                                <option value="10">Lớp 10</option>
+                                <option value="11">Lớp 11</option>
+                                <option value="12">Lớp 12</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="font-bold text-slate-700 block mb-1">Tên Bộ Đề Thi HSG</label>
+                            <input type="text" id="admQuizTitle" required placeholder="Bộ Đề Thi HSG Chuyên Sâu Tự Động Hóa" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-700 block mb-1">Nội Dung Câu Hỏi Trắc Nghiệm</label>
+                        <textarea id="admQText" required placeholder="Nhập câu hỏi..." class="w-full p-2.5 border border-slate-300 rounded-xl font-medium h-20"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" id="admOptA" required placeholder="Đáp án A" class="p-2.5 border border-slate-300 rounded-xl font-medium">
+                        <input type="text" id="admOptB" required placeholder="Đáp án B" class="p-2.5 border border-slate-300 rounded-xl font-medium">
+                        <input type="text" id="admOptC" required placeholder="Đáp án C" class="p-2.5 border border-slate-300 rounded-xl font-medium">
+                        <input type="text" id="admOptD" required placeholder="Đáp án D" class="p-2.5 border border-slate-300 rounded-xl font-medium">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Đáp Án Đúng</label>
+                            <select id="admCorrectOpt" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+                                <option value="0">A</option>
+                                <option value="1">B</option>
+                                <option value="2">C</option>
+                                <option value="3">D</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Thời Gian Luyện (Phút)</label>
+                            <input type="number" id="admQuizTime" value="15" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-700 block mb-1">Giải Thích Chi Tiết / Cơ Sở Lý Thuyết</label>
+                        <textarea id="admQExp" placeholder="Nhập hướng dẫn giải thích..." class="w-full p-2.5 border border-slate-300 rounded-xl font-medium h-16"></textarea>
+                    </div>
+                    <button type="submit" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-extrabold rounded-xl shadow transition">
+                        <i class="fa-solid fa-plus mr-1"></i> Bổ Sung Đề Thi Trắc Nghiệm Mới
+                    </button>
+                </form>
+
+                <!-- Form 3: Essay Form -->
+                <form id="formAddEssay" onsubmit="handleAddEssay(event)" class="admin-form hidden space-y-4 text-xs">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Khối Lớp</label>
+                            <select id="admEssayGrade" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+                                <option value="10">Lớp 10</option>
+                                <option value="11">Lớp 11</option>
+                                <option value="12">Lớp 12</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="font-bold text-slate-700 block mb-1">Tiêu Đề Bài Tập Tự Luận</label>
+                            <input type="text" id="admEssayTitle" required placeholder="Thiết kế Mạch Mạch Cảnh Báo Bằng IC Op-Amp" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-700 block mb-1">Nội Dung Đề Bài Kỹ Thuật</label>
+                        <textarea id="admEssayProblem" required placeholder="Yêu cầu đề bài..." class="w-full p-2.5 border border-slate-300 rounded-xl font-medium h-24"></textarea>
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-700 block mb-1">Đáp Án & Sơ Đồ Hướng Dẫn Giải Chi Tiết</label>
+                        <textarea id="admEssaySol" required placeholder="Hướng dẫn đáp án chi tiết..." class="w-full p-2.5 border border-slate-300 rounded-xl font-medium h-28"></textarea>
+                    </div>
+                    <button type="submit" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-extrabold rounded-xl shadow transition">
+                        <i class="fa-solid fa-plus mr-1"></i> Thêm Bài Tập Tự Luận Mới
+                    </button>
+                </form>
             </div>
         </section>
 
-        <!-- SECTION 5: THỐNG KÊ TIẾN ĐỘ HSG -->
+        <!-- SECTION 5: THỐNG KÊ TIẾN ĐỘ HSG & BẢNG XẾP HẠNG -->
         <section id="section-stats" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-chart-line text-cyan-600"></i> Báo Cáo Tiến Độ & Kết Quả Luyện Thi HSG
-                </h2>
-                <p class="text-sm text-slate-500 mt-1">Theo dõi tỷ lệ hoàn thành đề trắc nghiệm và điểm đánh giá bài tập kỹ thuật tự luận theo từng khối lớp.</p>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-cyan-600"></i> Tiến Độ Ôn Luyện & Bảng Xếp Hạng HSG
+                    </h2>
+                    <p class="text-sm text-slate-500 mt-1">Theo dõi bảng xếp hạng điểm số học sinh, danh sách bài đã làm và phân tích năng lực theo từng khối lớp.</p>
+                </div>
+                <div class="bg-cyan-50 border border-cyan-200 rounded-xl px-4 py-2 text-xs font-bold text-cyan-900 flex items-center gap-2">
+                    <i class="fa-solid fa-user-graduate text-cyan-600 text-base"></i>
+                    <div>
+                        <div class="text-[10px] text-cyan-600 uppercase">Tài khoản hiện tại:</div>
+                        <span id="statsStudentNameDisplay" class="text-sm font-extrabold text-cyan-950">Chưa đăng nhập</span>
+                    </div>
+                </div>
             </div>
 
+            <!-- Student History & Leaderboard Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Leaderboard (Bảng Xếp Hạng) -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-trophy text-amber-500"></i> Bảng Xếp Hạng Học Sinh Xuất Sắc
+                        </h3>
+                        <span class="text-xs bg-amber-50 text-amber-800 border border-amber-200 font-extrabold px-3 py-1 rounded-full">Toàn Hệ Thống</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead class="bg-slate-50 text-slate-500 uppercase font-bold border-b border-slate-200">
+                                <tr>
+                                    <th class="py-3 px-3">Thứ Hạng</th>
+                                    <th class="py-3 px-3">Họ & Tên Học Sinh</th>
+                                    <th class="py-3 px-3">Trường / Lớp</th>
+                                    <th class="py-3 px-3 text-center">Số Bài Thi</th>
+                                    <th class="py-3 px-3 text-right">Điểm ĐTB</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardTableBody" class="divide-y divide-slate-100 font-medium text-slate-800">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Personal Recent History -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-cyan-600"></i> Lịch Sử Làm Bài Cá Nhân
+                    </h3>
+                    <div id="studentHistoryList" class="space-y-3 custom-scrollbar max-h-[320px] overflow-y-auto">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Analytics Charts -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                     <h3 class="text-base font-bold text-slate-800 mb-4"><i class="fa-solid fa-chart-pie mr-2 text-cyan-600"></i> Tỷ Lệ Hoàn Thành Đề Thi Khối Lớp</h3>
@@ -402,6 +513,153 @@
 
     </main>
 
+    <!-- Modal Containers -->
+    
+    <!-- Edit Theory Matrix Modal -->
+    <div id="editTheoryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-black text-slate-900">Chỉnh Sửa Ma Trận Kiến Thức SGK</h3>
+                        <p class="text-xs text-slate-500">Cập nhật nội dung ma trận 4 mức độ đánh giá & nội dung bài học</p>
+                    </div>
+                </div>
+                <button onclick="closeEditTheoryModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="formEditTheory" onsubmit="handleSaveEditTheory(event)" class="space-y-4 text-xs">
+                <input type="hidden" id="editTheoryId">
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="font-bold text-slate-700 block mb-1">Khối Lớp SGK</label>
+                        <select id="editTheoryGrade" class="w-full p-2.5 border border-slate-300 rounded-xl font-medium focus:ring-2 focus:ring-amber-500">
+                            <option value="10">Công Nghệ 10</option>
+                            <option value="11">Công Nghệ 11</option>
+                            <option value="12">Công Nghệ 12</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="font-bold text-slate-700 block mb-1">Tên Chương / Chủ Đề</label>
+                        <input type="text" id="editTheoryChapter" required class="w-full p-2.5 border border-slate-300 rounded-xl font-medium focus:ring-2 focus:ring-amber-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Tên Bài Học Trọng Tâm</label>
+                    <input type="text" id="editTheoryTitle" required class="w-full p-2.5 border border-slate-300 rounded-xl font-medium focus:ring-2 focus:ring-amber-500">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="font-extrabold text-slate-800 block">Khung Ma Trận Đánh Giá 4 Mức Độ:</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <span class="font-bold text-sky-800 block mb-1">Mức 1: Nhận Biết (40%)</span>
+                            <textarea id="editMatrix1" required class="w-full p-2.5 border border-sky-200 rounded-xl font-medium h-20 bg-sky-50/50 focus:ring-2 focus:ring-sky-500"></textarea>
+                        </div>
+                        <div>
+                            <span class="font-bold text-emerald-800 block mb-1">Mức 2: Thông Hiểu (30%)</span>
+                            <textarea id="editMatrix2" required class="w-full p-2.5 border border-emerald-200 rounded-xl font-medium h-20 bg-emerald-50/50 focus:ring-2 focus:ring-emerald-500"></textarea>
+                        </div>
+                        <div>
+                            <span class="font-bold text-amber-800 block mb-1">Mức 3: Vận Dụng (20%)</span>
+                            <textarea id="editMatrix3" required class="w-full p-2.5 border border-amber-200 rounded-xl font-medium h-20 bg-amber-50/50 focus:ring-2 focus:ring-amber-500"></textarea>
+                        </div>
+                        <div>
+                            <span class="font-bold text-purple-800 block mb-1">Mức 4: Vận Dụng Cao & HSG (10%)</span>
+                            <textarea id="editMatrix4" required class="w-full p-2.5 border border-purple-200 rounded-xl font-medium h-20 bg-purple-50/50 focus:ring-2 focus:ring-purple-500"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Nội Dung Trọng Tâm Kỹ Thuật (HTML/Văn bản)</label>
+                    <textarea id="editTheoryContent" required class="w-full p-2.5 border border-slate-300 rounded-xl font-medium h-24 focus:ring-2 focus:ring-amber-500"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeEditTheoryModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition">Hủy Bỏ</button>
+                    <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-bold shadow transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi Ma Trận
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Modal (Student Login & Teacher Passcode) -->
+    <div id="authModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md p-6 space-y-5">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <div id="authModalIcon" class="w-9 h-9 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div>
+                        <h3 id="authModalTitle" class="text-base font-black text-slate-900">Đăng Nhập Học Sinh</h3>
+                        <p id="authModalSubtitle" class="text-xs text-slate-500">Ghi nhận họ tên để lưu điểm số & thứ hạng</p>
+                    </div>
+                </div>
+                <button onclick="closeAuthModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Student Form -->
+            <form id="studentAuthForm" onsubmit="handleStudentLogin(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Họ và Tên Học Sinh <span class="text-rose-500">*</span></label>
+                    <input type="text" id="studentNameInput" required placeholder="Ví dụ: Nguyễn Văn An" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-cyan-500 font-medium">
+                </div>
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Trường & Lớp Học <span class="text-rose-500">*</span></label>
+                    <input type="text" id="studentClassInput" required placeholder="Ví dụ: Lớp 11A1 - THPT Chuyên" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-cyan-500 font-medium">
+                </div>
+                <button type="submit" class="w-full py-3 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-xl shadow transition">
+                    <i class="fa-solid fa-right-to-bracket mr-1.5"></i> Xác Nhận Đăng Nhập Học Sinh
+                </button>
+            </form>
+
+            <!-- Teacher Form -->
+            <form id="teacherAuthForm" onsubmit="handleTeacherLogin(event)" class="space-y-4 text-xs hidden">
+                <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900">
+                    <i class="fa-solid fa-shield-halved text-amber-600 mr-1"></i> Mật khẩu truy cập giáo viên mặc định: <code class="font-black bg-amber-100 px-1.5 py-0.5 rounded text-amber-950">123456</code> hoặc <code class="font-black bg-amber-100 px-1.5 py-0.5 rounded text-amber-950">giaovien</code>
+                </div>
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Tên Giáo Viên Hướng Dẫn <span class="text-rose-500">*</span></label>
+                    <input type="text" id="teacherNameInput" required placeholder="Thầy/Cô Nguyễn Văn B" class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 font-medium">
+                </div>
+                <div>
+                    <label class="font-bold text-slate-700 block mb-1">Mật Khẩu Quản Trị <span class="text-rose-500">*</span></label>
+                    <input type="password" id="teacherPassInput" required placeholder="Nhập mật khẩu..." class="w-full p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 font-medium">
+                </div>
+                <button type="submit" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl shadow transition">
+                    <i class="fa-solid fa-key mr-1.5"></i> Xác Thực Giáo Viên
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Notification Dialog -->
+    <div id="notifyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-sm p-6 space-y-4 text-center">
+            <div id="notifyIcon" class="w-12 h-12 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center mx-auto text-xl font-bold">
+                <i class="fa-solid fa-info"></i>
+            </div>
+            <h3 id="notifyTitle" class="text-base font-black text-slate-900">Thông Báo Hệ Thống</h3>
+            <p id="notifyMessage" class="text-xs text-slate-600 leading-relaxed font-medium">Nội dung thông báo...</p>
+            <button onclick="closeNotifyModal()" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-xl shadow transition">
+                Đồng Ý / Đóng
+            </button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
@@ -415,21 +673,34 @@
         // Global App State
         let state = {
             currentRole: 'student', // 'student' | 'teacher'
+            currentUser: {
+                role: 'student',
+                name: '',
+                schoolClass: '',
+                isLoggedIn: false
+            },
+            teacherUser: {
+                name: '',
+                isLoggedIn: false
+            },
             currentTab: 'theory',
             currentTheoryGrade: 10,
             currentQuizGrade: 10,
             currentEssayGrade: 10,
             currentAdminSubtab: 'theory',
-            permissions: {
-                theory: true,
-                quiz: true,
-                essay: true
-            },
             activeQuiz: null,
             activeQuestionIdx: 0,
             userAnswers: {},
             quizTimerInterval: null,
-            timerSeconds: 900
+            timerSeconds: 900,
+            // Mock Leaderboard & History database
+            leaderboard: [
+                { name: 'Trần Minh Hoàng', schoolClass: '12 Cửu Long', testCount: 14, avgScore: 9.6 },
+                { name: 'Lê Ngọc Ánh', schoolClass: '11A1 - Chuyên Nguyễn Trãi', testCount: 12, avgScore: 9.4 },
+                { name: 'Nguyễn Đăng Khoa', schoolClass: '10 Lý 1', testCount: 10, avgScore: 9.1 },
+                { name: 'Phạm Phương Anh', schoolClass: '11 Chuyên Sinh', testCount: 9, avgScore: 8.8 }
+            ],
+            studentHistory: []
         };
 
         // Master Theory Matrix Data - Subject: Công Nghệ (SGK 10, 11, 12 & HSG AI)
@@ -482,10 +753,10 @@
                 matrix: {
                     nhanBiet: 'Cấu tạo động cơ 4 kỳ, 2 kỳ, hệ thống bôi trơn, làm mát, đánh lửa.',
                     thongHieu: 'Giải thích đồ thị công p-V và nguyên lý biến đổi chuyển động tịnh tiến thành quay.',
-                    vanDung: 'Tính tỉ số truyền $i = n_1 / n_2 = Z_2 / Z_1$ của hệ thống bánh răng.',
-                    vanDungCao: 'Phân tích giải pháp giảm khí thải $CO_2, NO_x$ bằng công nghệ phun nhiên liệu điện tử EFI.'
+                    vanDung: 'Tính tỉ số truyền i = n1 / n2 = Z2 / Z1 của hệ thống bánh răng.',
+                    vanDungCao: 'Phân tích giải pháp giảm khí thải CO2, NOx bằng công nghệ phun nhiên liệu điện tử EFI.'
                 },
-                contentHtml: `<p class="mb-2"><b>Tỉ số truyền cơ khí:</b> <code class="bg-cyan-50 text-cyan-800 px-2 py-0.5 rounded font-mono">i = n_1/n_2 = d_2/d_1 = Z_2/Z_1</code></p>`
+                contentHtml: `<p class="mb-2"><b>Tỉ số truyền cơ khí:</b> <code class="bg-cyan-50 text-cyan-800 px-2 py-0.5 rounded font-mono">i = n1/n2 = d2/d1 = Z2/Z1</code></p>`
             },
             {
                 id: 't12_1',
@@ -498,173 +769,120 @@
                     vanDung: 'Lập trình điều khiển động cơ bước (Stepper) hoặc Servo qua tín hiệu PWM.',
                     vanDungCao: 'Thiết kế hệ thống IoT giám sát nông nghiệp thông minh kết hợp AI dự đoán dịch bệnh.'
                 },
-                contentHtml: `<p class="mb-2"><b>Mạch vòng kín (Closed-loop):</b> Tín hiệu đầu ra được cảm biến phản hồi về bộ so sánh để hiệu chỉnh sai số $\\Delta e = r(t) - y(t)$.</p>`
+                contentHtml: `<p class="mb-2"><b>Mạch vòng kín (Closed-loop):</b> Tín hiệu đầu ra được cảm biến phản hồi về bộ so sánh để hiệu chỉnh sai số.</p>`
             }
         ];
 
-        // Master Quiz Database (10+ tests for EACH Grade: 10, 11, 12 = 30+ Tech/AI Quizzes!)
+        // Master Quiz Database
         let quizDatabase = {
-            10: Array.from({ length: 10 }, (_, i) => ({
-                id: `q10_${i+1}`,
-                grade: 10,
-                title: `Bộ Đề HSG Công Nghệ 10 - Đề ${i+1}: ${[
-                    'Thiết Kế Kỹ Thuật & Đột Phá AI',
-                    'Vật Liệu Mới & Công Nghệ Nano',
-                    'Bản Vẽ Kỹ Thuật CAD/CAM',
-                    'Quy Trình Chế Tạo Sản Phẩm',
-                    'Đánh Giá Vòng Đời Sản Phẩm',
-                    'Công Nghệ Trồng Trọt Thông Minh',
-                    'Tự Động Hóa Trong Nông Nghiệp',
-                    'Hệ Thống Cảm Biến Đất & Khí Hậu',
-                    'Bảo Quản & Chế Biến Công Nghệ Cao',
-                    'An Toàn Lao Động & Môi Trường'
-                ][i]}`,
-                timeMinutes: 15,
-                questions: [
-                    {
-                        q: 'Trong quy trình thiết kế kỹ thuật tiêu chuẩn, bước nào được thực hiện ngay sau khi xác định nhu cầu sản phẩm?',
-                        options: ['Chế tạo mẫu thử nghiệm', 'Tìm hiểu tổng quan và đề xuất giải pháp', 'Lập bản vẽ kỹ thuật chi tiết', 'Đánh giá chỉ tiêu kinh tế'],
-                        correct: 1,
-                        level: 'Nhận biết',
-                        explanation: 'Sau khi xác định nhu cầu, bước tiếp theo là thu thập thông tin, nghiên cứu tổng quan và đề xuất các giải pháp thiết kế khả thi.'
-                    },
-                    {
-                        q: 'Công nghệ nào sau đây giúp hệ thống sản xuất phát hiện vết nứt bề mặt kim loại với độ chính xác cao?',
-                        options: ['Thị giác máy tính (AI Computer Vision)', 'Công nghệ in 3D FDM', 'Mạng truyền thông Bluetooth', 'Hệ thống thủy lực cơ bản'],
-                        correct: 0,
-                        level: 'Thông hiểu',
-                        explanation: 'AI Computer Vision xử lý ảnh thời gian thực thu từ camera công nghiệp để nhận diện khuyết tật sản phẩm cực nhanh.'
-                    },
-                    {
-                        q: 'Vật liệu Composite có ưu điểm vượt trội nào so với kim loại truyền thống?',
-                        options: ['Tỷ suất độ bền trên khối lượng cao và chống ăn mòn hóa học tốt', 'Dễ nóng chảy và gia công đúc ở nhiệt độ thấp', 'Dẫn điện tốt như đồng tinh khiết', 'Giá thành luôn rẻ hơn chất dẻo thông thường'],
-                        correct: 0,
-                        level: 'Vận dụng',
-                        explanation: 'Composite có độ bền cơ học cao nhưng trọng lượng siêu nhẹ, không bị gỉ sét hay ăn mòn môi trường.'
-                    }
-                ]
-            })),
-            11: Array.from({ length: 10 }, (_, i) => ({
-                id: `q11_${i+1}`,
-                grade: 11,
-                title: `Bộ Đề HSG Công Nghệ 11 - Đề ${i+1}: ${[
-                    'Linh Kiện Bán Dẫn & Diode',
-                    'Transistor & Mạch Khuếch Đại',
-                    'IC Thuật Toán Op-Amp',
-                    'Mạch Tạo Xung & Định Thời',
-                    'Cơ Khí Chế Tạo & Gia Công CNC',
-                    'Động Cơ Đốt Trong & Nhiên Liệu',
-                    'Hệ Thống Phun Nhiên Liệu EFI',
-                    'Mạch Điện Tử Điều Khiển Công Nghiệp',
-                    'Hệ Thống Khí Nén & Thủy Lực',
-                    'Truyền Động Bánh Răng & Xích'
-                ][i]}`,
-                timeMinutes: 15,
-                questions: [
-                    {
-                        q: 'Trong mạch điện tử, Transistor loại NPN hoạt động ở trạng thái dẫn no (bão hòa) khi:',
-                        options: ['Dòng điện cực gốc $I_B$ đủ lớn làm $U_{CE} \\approx 0.2V$', 'Cực gốc B bị khóa hoán đổi âm cực', 'Điện áp cực C bằng 0V', 'Điện trở giữa B và E cực đại'],
-                        correct: 0,
-                        level: 'Vận dụng',
-                        explanation: 'Khi $I_B$ vượt ngưỡng bão hòa, mối nối C-E thông hoàn toàn (coi như công tắc đóng), điện áp $U_{CE}$ giảm xuống mức rất nhỏ (~0.2V).'
-                    },
-                    {
-                        q: 'Bộ phận nào trong động cơ đốt trong có nhiệm vụ biến chuyển động tịnh tiến của pít-tông thành chuyển động quay?',
-                        options: ['Trục khuỷu và thanh truyền', 'Trục cam và xupap', 'Bánh đà và xéc-măng', 'Bơm dầu bôi trơn'],
-                        correct: 0,
-                        level: 'Nhận biết',
-                        explanation: 'Thanh truyền nối pít-tông với cổ khuỷu của trục khuỷu, biến lực đẩy tịnh tiến thành momen quay trên trục khuỷu.'
-                    }
-                ]
-            })),
-            12: Array.from({ length: 10 }, (_, i) => ({
-                id: `q12_${i+1}`,
-                grade: 12,
-                title: `Bộ Đề HSG Công Nghệ 12 - Đề ${i+1}: ${[
-                    'Vi Điều Khiển & Cổng GPIO',
-                    'Chuyển Đổi ADC/DAC & Cảm Biến',
-                    'Mạng Truyền Thông IoT & MQTT',
-                    'Điều Khiển Động Cơ Đệm & Servo PWM',
-                    'Hệ Thống Tự Động Hóa PLC',
-                    'Trí Tuệ Nhân Tạo AI Trong Công Nghệ',
-                    'Hệ Thống Nhúng & Mạng Cảm Biến',
-                    'Robot Công Nghiệp & Tay Máy',
-                    'Năng Lượng Tái Tạo & Smart Grid',
-                    'Nhà Thông Minh Smart Home & AI'
-                ][i]}`,
-                timeMinutes: 20,
-                questions: [
-                    {
-                        q: 'Để vi điều khiển đọc được giá trị nhiệt độ liên tục từ cảm biến analog LM35, vi điều khiển cần sử dụng khối chức năng nào?',
-                        options: ['Bộ chuyển đổi tương tự - số ADC (Analog to Digital Converter)', 'Khối xuất xung điều chế độ rộng PWM', 'Bộ đếm thời gian Timer ngắt ngoài', 'Cổng giao tiếp nối tiếp UART'],
-                        correct: 0,
-                        level: 'Thông hiểu',
-                        explanation: 'Cảm biến LM35 trả về điện áp tương tự (Analog), do đó khối ADC biến đổi điện áp này thành chuỗi nhị phân để vi điều khiển xử lý.'
-                    },
-                    {
-                        q: 'Trong hệ thống IoT tự động hóa nhà thông minh, giao thức truyền thông nhẹ tối ưu cho cảm biến băng thông thấp là:',
-                        options: ['MQTT (Message Queuing Telemetry Transport)', 'FTP (File Transfer Protocol)', 'HTTP/1.1 POST', 'SMTP Mail Protocol'],
-                        correct: 0,
-                        level: 'Vận dụng cao',
-                        explanation: 'Giao thức MQTT hoạt động theo mô hình Publish/Subscribe rất nhẹ, tiết kiệm năng lượng và phù hợp cho mạng thiết bị IoT.'
-                    }
-                ]
-            }))
+            10: [
+                {
+                    id: 'q10_1',
+                    grade: 10,
+                    title: 'Đề Thi HSG Lớp 10 Số 1: Thiết Kế Kỹ Thuật & Vật Liệu Mới',
+                    timeMinutes: 15,
+                    questions: [
+                        {
+                            q: 'Trình tự tiêu chuẩn của Quy trình thiết kế kỹ thuật gồm bao nhiêu bước chính?',
+                            options: ['3 bước', '4 bước', '5 bước', '6 bước'],
+                            correct: 2,
+                            level: 'Nhận biết',
+                            explanation: 'Quy trình thiết kế kỹ thuật chuẩn gồm 5 bước: (1) Xác định nhu cầu, (2) Tìm hiểu tổng quan & Giải pháp, (3) Tối ưu hóa thiết kế, (4) Lập bản vẽ & Chế tạo mẫu, (5) Thử nghiệm & Đánh giá.'
+                        },
+                        {
+                            q: 'Vật liệu Composite có ưu điểm vượt trội nào so với kim loại truyền thống?',
+                            options: ['Tính dẫn điện cao hơn', 'Tỉ lệ độ bền trên khối lượng (độ bền riêng) rất cao', 'Dễ bị ăn mòn hóa học', 'Giá thành luôn rẻ hơn'],
+                            correct: 1,
+                            level: 'Thông hiểu',
+                            explanation: 'Vật liệu Composite (sợi carbon, sợi thủy tinh) có khối lượng nhẹ nhưng độ bền kéo rất cao, cho tỉ lệ độ bền/khối lượng vượt trội so với kim loại.'
+                        },
+                        {
+                            q: 'Công nghệ nào giúp tối ưu hóa sản xuất thông minh trong Công nghiệp 4.0?',
+                            options: ['Trí tuệ nhân tạo (AI) và Internet kết nối vạn vật (IoT)', 'Gia công thủ công truyền thống', 'Động cơ hơi nước', 'Sử dụng bản vẽ tay'],
+                            correct: 0,
+                            level: 'Vận dụng',
+                            explanation: 'Công nghiệp 4.0 cốt lõi dựa trên sự hội tụ của AI, IoT, Dữ liệu lớn (Big Data) và Robot tự động hóa.'
+                        }
+                    ]
+                }
+            ],
+            11: [
+                {
+                    id: 'q11_1',
+                    grade: 11,
+                    title: 'Đề Thi HSG Lớp 11 Số 1: Linh Kiện Bán Dẫn & Động Cơ Đốt Trong',
+                    timeMinutes: 15,
+                    questions: [
+                        {
+                            q: 'Linh kiện bán dẫn nào được ứng dụng chủ yếu để khuếch đại dòng điện hoặc làm khóa điện tử?',
+                            options: ['Tụ điện (Capacitor)', 'Cuộn cảm (Inductor)', 'Transistor (Tranzito)', 'Điện trở (Resistor)'],
+                            correct: 2,
+                            level: 'Nhận biết',
+                            explanation: 'Transistor là linh kiện bán dẫn 3 cực (B, C, E hoặc G, D, S) dùng để khuếch đại tín hiệu điện hoặc làm công tắc chuyển mạch.'
+                        },
+                        {
+                            q: 'Cho hệ thống bánh răng ăn khớp có bánh dẫn Z1 = 20 răng, bánh bị dẫn Z2 = 60 răng. Tỉ số truyền i là bao nhiêu?',
+                            options: ['i = 1/3', 'i = 3', 'i = 2', 'i = 0.5'],
+                            correct: 1,
+                            level: 'Vận dụng',
+                            explanation: 'Công thức tỉ số truyền i = Z2 / Z1 = 60 / 20 = 3 (Bánh bị dẫn quay chậm hơn bánh dẫn 3 lần nhưng lực kéo tăng 3 lần).'
+                        }
+                    ]
+                }
+            ],
+            12: [
+                {
+                    id: 'q12_1',
+                    grade: 12,
+                    title: 'Đề Thi HSG Lớp 12 Số 1: Vi Điều Khiển, AI & Hệ Thống Tự Động Hóa',
+                    timeMinutes: 15,
+                    questions: [
+                        {
+                            q: 'Trong hệ thống điều khiển tự động vòng kín (Closed-Loop System), bộ phận nào đảm nhận việc thu thập giá trị thực tế đầu ra để phản hồi?',
+                            options: ['Bộ vi xử lý trung tâm', 'Cảm biến (Sensor)', 'Cơ cấu chấp hành (Actuator)', 'Bộ nguồn điện'],
+                            correct: 1,
+                            level: 'Thông hiểu',
+                            explanation: 'Cảm biến có nhiệm vụ đo đạc giá trị thực tế ở đầu ra và gửi tín hiệu phản hồi (Feedback) về bộ so sánh để hiệu chỉnh sai số.'
+                        },
+                        {
+                            q: 'Tín hiệu PWM (Pulse Width Modulation) thường được vi điều khiển sử dụng để:',
+                            options: ['Tăng dung lượng lưu trữ flash', 'Đọc tín hiệu analog từ môi trường', 'Điều khiển tốc độ động cơ DC hoặc góc quay Servo', 'Biến đổi dòng điện AC thành DC'],
+                            correct: 2,
+                            level: 'Vận dụng cao',
+                            explanation: 'PWM (Điều chế độ rộng xung) thay đổi tỉ lệ chu kỳ bật/tắt (Duty Cycle) để điều khiển điện áp trung bình cấp cho động cơ hoặc Servo.'
+                        }
+                    ]
+                }
+            ]
         };
 
-        // Master Essay Exercises Data (Đề thi HSG & Tự Luận Công Nghệ)
+        // Master Essay Data
         let essayData = [
             {
                 id: 'e10_1',
                 grade: 10,
-                title: 'Đề HSG Lớp 10: Thiết Kế Hệ Thống Tưới Nông Nghiệp Thông Minh AI',
-                problem: 'Hãy thiết kế sơ đồ khối và quy trình kỹ thuật cho hệ thống tưới cây tự động dựa trên cảm biến độ ẩm đất và dự báo thời tiết bằng AI.\na) Vẽ sơ đồ khối hệ thống (Gồm Đầu vào, Xử lý trung tâm, Đầu ra, Phản hồi).\nb) Nêu nguyên lý hoạt động khi độ ẩm đất xuống dưới 30%.',
-                solution: `<b>Hướng dẫn giải HSG:</b><br>
-                1. <b>Sơ đồ khối:</b> [Cảm biến độ ẩm + API Thời tiết AI] -> [Bộ xử lý Vi điều khiển ESP32] -> [Rơ-le điều khiển Bơm nước] -> [Độ ẩm đất tăng (Phản hồi loop)].<br>
-                2. <b>Nguyên lý:</b> Khi $SD < 30\\%$, cảm biến gửi tín hiệu analog về ADC. ESP32 truy vấn AI thời tiết (nếu không có mưa trong 6h tới), tự động kích hoạt Rơ-le bật bơm tưới cho đến khi $SD \\ge 70\\%$.`,
-                rubric: 'Vẽ sơ đồ khối chuẩn (1.5đ), Giải thích logic AI (1.0đ)'
+                title: 'Bài Toán Thiết Kế Kỹ Thuật: Hệ Thống Tưới Nước Tự Động Cho Mái Nhà Mát',
+                problem: 'Hãy áp dụng quy trình thiết kế kỹ thuật 5 bước để đề xuất sơ đồ khối và nguyên lý cho một hệ thống tưới phun sương tự động bật khi nhiệt độ mái tôn vượt quá 38°C.',
+                solution: '1. Xác định nhu cầu: Giảm nhiệt độ mái nhà tự động khi trời nắng nóng.\n2. Giải pháp: Dùng cảm biến nhiệt độ (NTC/LM35), bộ so sánh điện áp/Microcontroller và Relay điều khiển máy bơm 12V.\n3. Sơ đồ khối: Cảm biến -> Bộ xử lý -> Relay -> Động cơ Bơm -> Vòi phun sương.',
+                rubric: 'Đạt điểm tối đa khi trình bày đủ 5 bước thiết kế, có sơ đồ khối logic và chọn linh kiện thực tế.'
             },
             {
                 id: 'e11_1',
                 grade: 11,
-                title: 'Đề HSG Lớp 11: Tính Toán Mạch Điện Tử Rơ-Le Cảm Biến Ánh Sáng',
-                problem: 'Cho mạch cảm biến quang trở (LDR) điều khiển đèn đường tự động bật vào ban đêm. Biết nguồn VCC = 12V, Rơ-le 12V có điện trở cuộn dây $R_c = 400 \\Omega$, Transistor NPN $H_{FE} = 100$. Ban đêm $R_{LDR} = 50 k\\Omega$, ban ngày $R_{LDR} = 1 k\\Omega$.\na) Tính dòng điện cực thu $I_C$ cần thiết để kích rơ-le.\nb) Tính giá trị điện trở định thiên $R_B$ để transistor bão hòa vào ban đêm.',
-                solution: `<b>Hướng dẫn giải HSG:</b><br>
-                a) $I_C = U/R_c = 12V / 400\\Omega = 0.03A = 30mA$.<br>
-                b) Dòng cực gốc tối thiểu: $I_B = I_C / H_{FE} = 30mA / 100 = 0.3mA$. Để đảm bảo dẫn bão hòa, lấy $I_B = 0.5mA$. Tương ứng tính $R_B \\approx (VCC - U_{BE}) / I_B = (12 - 0.7) / 0.0005 = 22.6 k\\Omega$.`,
-                rubric: 'Tính dòng I_C (1.0đ), Tính R_B (1.5đ)'
-            },
-            {
-                id: 'e12_1',
-                grade: 12,
-                title: 'Đề HSG Lớp 12: Lập Trình Lọc Nhiễu Tín Hiệu Cảm Biến Trong Vi Điều Khiển',
-                problem: 'Tín hiệu điện áp đọc từ cảm biến dòng điện công nghiệp thường bị nhiễu cao tần. Hãy trình bày giải pháp thuật toán Lọc Trung Bình Động (Moving Average Filter) bằng giả mã (Pseudocode) trên vi điều khiển 32-bit.',
-                solution: `<b>Hướng dẫn giải HSG:</b><br>
-                Thuật toán lưu N mẫu gần nhất vào mảng vòng (Circular Buffer):\n
-                <code>
-                #define N 10\n
-                float buffer[N]; int idx = 0;\n
-                float getFilteredValue(float rawVal) {\n
-                  buffer[idx] = rawVal;\n
-                  idx = (idx + 1) % N;\n
-                  float sum = 0;\n
-                  for(int i=0; i<N; i++) sum += buffer[i];\n
-                  return sum / N;\n
-                }
-                </code>`,
-                rubric: 'Giải thích nguyên lý lọc (1.0đ), Viết giả mã đúng cấu trúc (1.5đ)'
+                title: 'Phân Tích Kỹ Thuật: Mạch Báo Cháy Tự Động Sử Dụng Transistor & Thermistor',
+                problem: 'Cho mạch điện gồm nguồn 9V, Thermistor NTC, Biến trở R1, Transistor NPN C1815, Còi báo Chuông 9V. Hãy giải thích nguyên lý làm việc khi nhiệt độ môi trường tăng cao.',
+                solution: 'Khi nhiệt độ tăng -> Điện trở NTC giảm -> Điện áp tại cực B (V_B) của Transistor tăng vượt ngưỡng 0.6V -> Transistor dẫn bão hòa (dòng I_C chạy từ C sang E) -> Còi báo cháy được cấp nguồn và phát ra âm thanh cảnh báo.',
+                rubric: 'Cần phân tích rõ đặc tính nhiệt điện trở NTC và điều kiện mở Transistor NPN.'
             }
         ];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderTheoryList();
-            renderQuizList();
-            renderEssayList();
-            renderAdminView();
-            initCharts();
-        });
-
+        // Navigation Handler (FIXED)
         function switchTab(tabName) {
+            if (tabName === 'admin' && !state.teacherUser.isLoggedIn) {
+                openAuthModal('teacher');
+                return;
+            }
+
             state.currentTab = tabName;
             document.querySelectorAll('.nav-tab').forEach(btn => {
                 btn.classList.remove('text-cyan-700', 'bg-cyan-50');
@@ -680,7 +898,18 @@
             const targetSec = document.getElementById(`section-${tabName}`);
             if (targetSec) targetSec.classList.remove('hidden');
 
+            if (tabName === 'theory') renderTheoryList();
             if (tabName === 'quiz') renderQuizList();
+            if (tabName === 'essay') renderEssayList();
+            if (tabName === 'stats') renderLeaderboard();
+        }
+
+        function switchUserRole(role) {
+            if (role === 'teacher' && !state.teacherUser.isLoggedIn) {
+                openAuthModal('teacher');
+                return;
+            }
+            setRole(role);
         }
 
         function setRole(role) {
@@ -693,12 +922,31 @@
                 btnStudent.className = "px-3 py-1 text-xs rounded-lg font-bold transition-all bg-cyan-600 text-white shadow-md";
                 btnTeacher.className = "px-3 py-1 text-xs rounded-lg font-bold transition-all text-slate-300 hover:text-white";
                 badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-cyan-950 text-cyan-300 border border-cyan-800";
-                badge.innerHTML = `<i class="fa-solid fa-graduation-cap mr-1.5"></i> Học Sinh HSG`;
             } else {
-                btnTeacher.className = "px-3 py-1 text-xs rounded-lg font-bold transition-all bg-cyan-600 text-white shadow-md";
+                btnTeacher.className = "px-3 py-1 text-xs rounded-lg font-bold transition-all bg-purple-600 text-white shadow-md";
                 btnStudent.className = "px-3 py-1 text-xs rounded-lg font-bold transition-all text-slate-300 hover:text-white";
                 badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-purple-950 text-purple-300 border border-purple-800";
-                badge.innerHTML = `<i class="fa-solid fa-user-tie mr-1.5"></i> Giáo Viên Hướng Dẫn`;
+            }
+
+            updateUserUI();
+        }
+
+        function updateUserUI() {
+            const badgeText = document.getElementById('userBadgeText');
+            const btnAuthText = document.getElementById('btnAuthText');
+            const statsStudentNameDisplay = document.getElementById('statsStudentNameDisplay');
+
+            if (state.currentRole === 'teacher' && state.teacherUser.isLoggedIn) {
+                badgeText.textContent = `GV: ${state.teacherUser.name}`;
+                btnAuthText.textContent = "Đăng Xuất GV";
+            } else if (state.currentUser.isLoggedIn) {
+                badgeText.textContent = `${state.currentUser.name}`;
+                btnAuthText.textContent = "Đổi Tài Khoản";
+                if (statsStudentNameDisplay) statsStudentNameDisplay.textContent = `${state.currentUser.name} (${state.currentUser.schoolClass})`;
+            } else {
+                badgeText.textContent = "Học Sinh HSG";
+                btnAuthText.textContent = "Đăng Nhập";
+                if (statsStudentNameDisplay) statsStudentNameDisplay.textContent = "Chưa đăng nhập";
             }
         }
 
@@ -718,18 +966,26 @@
             const items = theoryData.filter(t => t.grade === state.currentTheoryGrade);
 
             if (items.length === 0) {
-                container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white rounded-2xl border border-slate-200">Chưa có dữ liệu ma trận cho Khối Công Nghệ ${state.currentTheoryGrade}. Vui lòng cập nhật trong phần Quản Trị Giáo Viên!</div>`;
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white rounded-2xl border border-slate-200">Chưa có dữ liệu ma trận cho Khối Công Nghệ ${state.currentTheoryGrade}.</div>`;
                 return;
             }
 
             container.innerHTML = items.map(item => `
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-cyan-300">
-                    <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between bg-slate-50 gap-3">
                         <div>
                             <span class="text-xs font-extrabold px-3 py-1 rounded-lg bg-cyan-100 text-cyan-800">${item.chapter}</span>
                             <h3 class="text-lg font-black text-slate-900 mt-1.5">${item.title}</h3>
                         </div>
-                        <span class="text-xs font-black bg-slate-200 text-slate-700 px-3 py-1 rounded-full">Công Nghệ ${item.grade}</span>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-black bg-slate-200 text-slate-700 px-3 py-1 rounded-full">Công Nghệ ${item.grade}</span>
+                            <button onclick="openEditTheoryModal('${item.id}')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-xs shadow flex items-center gap-1.5 transition" title="Chỉnh sửa ma trận này">
+                                <i class="fa-solid fa-pen-to-square"></i> Sửa Ma Trận
+                            </button>
+                            <button onclick="deleteTheoryItem('${item.id}')" class="px-2.5 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-xl font-bold text-xs transition" title="Xóa ma trận này">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="p-5 space-y-4">
@@ -762,39 +1018,114 @@
             `).join('');
         }
 
+        // Functions for Editing Theory Matrix Items
+        function openEditTheoryModal(id) {
+            const item = theoryData.find(t => t.id === id);
+            if (!item) return;
+
+            document.getElementById('editTheoryId').value = item.id;
+            document.getElementById('editTheoryGrade').value = item.grade;
+            document.getElementById('editTheoryChapter').value = item.chapter;
+            document.getElementById('editTheoryTitle').value = item.title;
+            
+            document.getElementById('editMatrix1').value = item.matrix.nhanBiet || '';
+            document.getElementById('editMatrix2').value = item.matrix.thongHieu || '';
+            document.getElementById('editMatrix3').value = item.matrix.vanDung || '';
+            document.getElementById('editMatrix4').value = item.matrix.vanDungCao || '';
+            
+            document.getElementById('editTheoryContent').value = item.contentHtml || '';
+
+            document.getElementById('editTheoryModal').classList.remove('hidden');
+        }
+
+        function closeEditTheoryModal() {
+            document.getElementById('editTheoryModal').classList.add('hidden');
+        }
+
+        function handleSaveEditTheory(e) {
+            e.preventDefault();
+            const id = document.getElementById('editTheoryId').value;
+            const item = theoryData.find(t => t.id === id);
+
+            if (!item) return;
+
+            item.grade = parseInt(document.getElementById('editTheoryGrade').value);
+            item.chapter = document.getElementById('editTheoryChapter').value.trim();
+            item.title = document.getElementById('editTheoryTitle').value.trim();
+
+            item.matrix.nhanBiet = document.getElementById('editMatrix1').value.trim();
+            item.matrix.thongHieu = document.getElementById('editMatrix2').value.trim();
+            item.matrix.vanDung = document.getElementById('editMatrix3').value.trim();
+            item.matrix.vanDungCao = document.getElementById('editMatrix4').value.trim();
+
+            item.contentHtml = document.getElementById('editTheoryContent').value.trim();
+
+            closeEditTheoryModal();
+            renderTheoryList();
+            showNotify("Đã Cập Nhật", "Ma trận kiến thức bài học đã được lưu thay đổi thành công!", "fa-solid fa-pen-to-square", "bg-amber-100 text-amber-700");
+        }
+
+        function deleteTheoryItem(id) {
+            const idx = theoryData.findIndex(t => t.id === id);
+            if (idx !== -1) {
+                const deletedTitle = theoryData[idx].title;
+                theoryData.splice(idx, 1);
+                renderTheoryList();
+                showNotify("Đã Xóa Ma Trận", `Đã xóa bài học "<b>${deletedTitle}</b>" khỏi ma trận kiến thức!`, "fa-solid fa-trash", "bg-rose-100 text-rose-700");
+            }
+        }
+
+        // Quiz System Functions
         function selectQuizGrade(grade) {
             state.currentQuizGrade = grade;
-            document.querySelectorAll('.quiz-grade-btn').forEach(b => {
-                b.className = "quiz-grade-btn flex-1 md:flex-none px-4 py-2 text-xs font-extrabold rounded-xl bg-white text-slate-700 hover:bg-slate-100 transition";
+            [10, 11, 12].forEach(g => {
+                const btn = document.getElementById(`quiz-grade-tab-${g}`);
+                if (btn) {
+                    if (g === grade) {
+                        btn.className = "quiz-grade-btn flex-1 md:flex-none px-4 py-2 text-xs font-extrabold rounded-xl bg-cyan-600 text-white shadow-md transition";
+                    } else {
+                        btn.className = "quiz-grade-btn flex-1 md:flex-none px-4 py-2 text-xs font-extrabold rounded-xl bg-white text-slate-700 hover:bg-slate-100 transition";
+                    }
+                }
             });
-            const activeTab = document.getElementById(`quiz-grade-tab-${grade}`);
-            if (activeTab) activeTab.className = "quiz-grade-btn flex-1 md:flex-none px-4 py-2 text-xs font-extrabold rounded-xl bg-cyan-600 text-white shadow-md transition";
-
             renderQuizList();
         }
 
         function renderQuizList() {
-            document.getElementById('quiz-player').classList.add('hidden');
-            document.getElementById('quiz-list-view').classList.remove('hidden');
-
-            const list = quizDatabase[state.currentQuizGrade] || [];
-            document.getElementById('quiz-grade-title').innerHTML = `<span class="w-3 h-3 rounded-full bg-cyan-600 inline-block"></span> Ngân Hàng ${list.length}+ Đề HSG Công Nghệ Lớp ${state.currentQuizGrade}`;
-            document.getElementById('quiz-count-badge').textContent = `${list.length} Bộ Đề`;
-
             const grid = document.getElementById('quiz-grid');
-            grid.innerHTML = list.map((q, idx) => `
-                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4">
+            const titleEl = document.getElementById('quiz-grade-title');
+            const badgeEl = document.getElementById('quiz-count-badge');
+            const quizPlayer = document.getElementById('quiz-player');
+            const quizListView = document.getElementById('quiz-list-view');
+
+            if (quizPlayer) quizPlayer.classList.add('hidden');
+            if (quizListView) quizListView.classList.remove('hidden');
+
+            const quizzes = quizDatabase[state.currentQuizGrade] || [];
+
+            if (titleEl) titleEl.innerHTML = `<span class="w-3 h-3 rounded-full bg-cyan-600"></span> Danh Sách Bộ Đề Lớp ${state.currentQuizGrade}`;
+            if (badgeEl) badgeEl.textContent = `${quizzes.length} Bộ Đề`;
+
+            if (!grid) return;
+
+            if (quizzes.length === 0) {
+                grid.innerHTML = `<div class="col-span-full p-8 text-center text-slate-400 bg-white rounded-2xl border border-slate-200">Chưa có bộ đề trắc nghiệm cho Lớp ${state.currentQuizGrade}.</div>`;
+                return;
+            }
+
+            grid.innerHTML = quizzes.map(q => `
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-cyan-300 transition-all flex flex-col justify-between space-y-4">
                     <div class="space-y-2">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs font-extrabold px-2.5 py-0.5 rounded-lg bg-cyan-100 text-cyan-800">Đề ${idx + 1}</span>
-                            <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-clock mr-1"></i>${q.timeMinutes} Phút</span>
+                            <span class="px-2.5 py-1 text-[11px] font-extrabold bg-cyan-100 text-cyan-800 rounded-lg">Lớp ${q.grade}</span>
+                            <span class="text-xs text-slate-500 font-semibold"><i class="fa-regular fa-clock mr-1 text-amber-500"></i>${q.timeMinutes} phút</span>
                         </div>
                         <h4 class="font-extrabold text-slate-900 text-base leading-snug">${q.title}</h4>
-                        <p class="text-xs text-slate-500">${q.questions.length} câu trắc nghiệm chuẩn ma trận HSG</p>
+                        <p class="text-xs text-slate-500"><i class="fa-solid fa-circle-question mr-1 text-cyan-600"></i>${q.questions.length} câu hỏi trắc nghiệm HSG</p>
                     </div>
 
-                    <button onclick="startQuiz('${q.id}')" class="w-full py-2.5 px-4 bg-cyan-600 hover:bg-cyan-700 text-white font-extrabold text-xs rounded-xl shadow transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-play"></i> Bắt Đầu Luyện Đề
+                    <button onclick="startQuiz('${q.id}')" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-extrabold rounded-xl shadow transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Bắt Đầu Làm Bài
                     </button>
                 </div>
             `).join('');
@@ -816,74 +1147,96 @@
             document.getElementById('player-grade-badge').textContent = `Công Nghệ ${quiz.grade}`;
             document.getElementById('player-title').textContent = quiz.title;
 
-            startQuizTimer();
+            if (state.quizTimerInterval) clearInterval(state.quizTimerInterval);
+            updateQuizTimerDisplay();
+            state.quizTimerInterval = setInterval(() => {
+                state.timerSeconds--;
+                updateQuizTimerDisplay();
+                if (state.timerSeconds <= 0) {
+                    clearInterval(state.quizTimerInterval);
+                    showNotify("Hết Giờ Làm Bài", "Thời gian làm bài đã kết thúc! Hệ thống sẽ tự động nộp bài thi của bạn.", "fa-solid fa-clock", "bg-amber-100 text-amber-700");
+                    submitQuiz();
+                }
+            }, 1000);
+
             renderQuestion();
             renderQuestionPalette();
         }
 
-        function startQuizTimer() {
-            if (state.quizTimerInterval) clearInterval(state.quizTimerInterval);
-            state.quizTimerInterval = setInterval(() => {
-                state.timerSeconds--;
-                if (state.timerSeconds <= 0) {
-                    clearInterval(state.quizTimerInterval);
-                    alert("Đã hết thời gian làm bài trắc nghiệm!");
-                    submitQuiz();
-                    return;
-                }
-                const m = Math.floor(state.timerSeconds / 60).toString().padStart(2, '0');
-                const s = (state.timerSeconds % 60).toString().padStart(2, '0');
-                document.getElementById('quiz-timer').textContent = `${m}:${s}`;
-            }, 1000);
+        function updateQuizTimerDisplay() {
+            const timerEl = document.getElementById('quiz-timer');
+            if (!timerEl) return;
+            const mins = Math.floor(state.timerSeconds / 60);
+            const secs = state.timerSeconds % 60;
+            timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
         function renderQuestion() {
             const quiz = state.activeQuiz;
-            const q = quiz.questions[state.activeQuestionIdx];
+            if (!quiz) return;
 
+            const q = quiz.questions[state.activeQuestionIdx];
             document.getElementById('player-q-number').textContent = `Câu ${state.activeQuestionIdx + 1}/${quiz.questions.length}`;
-            document.getElementById('player-q-level').textContent = `Mức độ: ${q.level || 'Vận dụng'}`;
+            document.getElementById('player-q-level').textContent = `Mức độ: ${q.level || 'HSG'}`;
             document.getElementById('player-q-text').textContent = q.q;
 
-            document.getElementById('player-explanation').classList.add('hidden');
+            const expEl = document.getElementById('player-explanation');
+            if (expEl) expEl.classList.add('hidden');
 
-            const optionsContainer = document.getElementById('player-options');
             const selectedOpt = state.userAnswers[state.activeQuestionIdx];
+            const optionsContainer = document.getElementById('player-options');
 
-            optionsContainer.innerHTML = q.options.map((opt, i) => {
-                const isSelected = selectedOpt === i;
+            optionsContainer.innerHTML = q.options.map((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                const isSelected = selectedOpt === idx;
+
+                let classes = "w-full p-3.5 text-left rounded-xl border text-xs font-semibold flex items-center space-x-3 transition cursor-pointer ";
+                if (isSelected) {
+                    classes += "bg-cyan-50 border-cyan-500 text-cyan-900 shadow-sm";
+                } else {
+                    classes += "bg-white border-slate-200 text-slate-700 hover:bg-slate-50";
+                }
+
                 return `
-                    <button onclick="selectOption(${i})" class="w-full text-left p-4 rounded-xl border transition flex items-start space-x-3 ${isSelected ? 'border-cyan-600 bg-cyan-50/80 text-cyan-900 font-bold' : 'border-slate-200 hover:border-slate-300 bg-white text-slate-800'}">
-                        <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${isSelected ? 'bg-cyan-600 text-white' : 'bg-slate-100 text-slate-600'}">
-                            ${String.fromCharCode(65 + i)}
+                    <div onclick="selectAnswer(${idx})" class="${classes}">
+                        <span class="w-6 h-6 rounded-lg ${isSelected ? 'bg-cyan-600 text-white' : 'bg-slate-100 text-slate-600'} font-bold flex items-center justify-center text-xs flex-shrink-0">
+                            ${letter}
                         </span>
-                        <span class="text-sm pt-0.5">${opt}</span>
-                    </button>
+                        <span class="flex-1">${opt}</span>
+                    </div>
                 `;
             }).join('');
+        }
 
+        function selectAnswer(optIdx) {
+            state.userAnswers[state.activeQuestionIdx] = optIdx;
+            renderQuestion();
             renderQuestionPalette();
         }
 
-        function selectOption(optIdx) {
-            state.userAnswers[state.activeQuestionIdx] = optIdx;
-            renderQuestion();
-        }
-
         function checkCurrentAnswer() {
-            const q = state.activeQuiz.questions[state.activeQuestionIdx];
-            const expBox = document.getElementById('player-explanation');
+            const quiz = state.activeQuiz;
+            if (!quiz) return;
+            const q = quiz.questions[state.activeQuestionIdx];
+            const expEl = document.getElementById('player-explanation');
             const expText = document.getElementById('player-explanation-text');
 
-            expText.textContent = q.explanation || 'Đáp án được xác minh dựa trên quy trình kỹ thuật và giáo trình SGK Công nghệ mới.';
-            expBox.classList.remove('hidden');
+            if (expEl && expText) {
+                const correctLetter = String.fromCharCode(65 + q.correct);
+                expText.innerHTML = `<b>Đáp án đúng: ${correctLetter}</b> - ${q.options[q.correct]}<br><br>${q.explanation}`;
+                expEl.classList.remove('hidden');
+            }
         }
 
-        function navigateQuiz(dir) {
-            const newIdx = state.activeQuestionIdx + dir;
-            if (newIdx >= 0 && newIdx < state.activeQuiz.questions.length) {
+        function navigateQuiz(direction) {
+            const quiz = state.activeQuiz;
+            if (!quiz) return;
+
+            const newIdx = state.activeQuestionIdx + direction;
+            if (newIdx >= 0 && newIdx < quiz.questions.length) {
                 state.activeQuestionIdx = newIdx;
                 renderQuestion();
+                renderQuestionPalette();
             }
         }
 
@@ -923,230 +1276,118 @@
                 if (state.userAnswers[idx] === q.correct) correctCount++;
             });
 
-            const score = ((correctCount / quiz.questions.length) * 10).toFixed(1);
-            alert(`Chúc mừng bạn đã hoàn thành đề thi HSG!\n\nKết Quả: ${correctCount}/${quiz.questions.length} Câu Đúng\nĐiểm Đánh Giá: ${score}/10`);
+            const score = parseFloat(((correctCount / quiz.questions.length) * 10).toFixed(1));
+            
+            // Record history
+            const record = {
+                title: quiz.title,
+                score: score,
+                correctCount: correctCount,
+                total: quiz.questions.length,
+                date: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString('vi-VN')
+            };
+            state.studentHistory.unshift(record);
+
+            // Update student in leaderboard if logged in
+            if (state.currentUser.isLoggedIn) {
+                let found = state.leaderboard.find(item => item.name === state.currentUser.name);
+                if (found) {
+                    found.testCount++;
+                    found.avgScore = parseFloat(((found.avgScore * (found.testCount - 1) + score) / found.testCount).toFixed(1));
+                } else {
+                    state.leaderboard.push({
+                        name: state.currentUser.name,
+                        schoolClass: state.currentUser.schoolClass,
+                        testCount: 1,
+                        avgScore: score
+                    });
+                }
+            }
+
+            const studentName = state.currentUser.isLoggedIn ? state.currentUser.name : "Học sinh";
+            showNotify(
+                "Hoàn Thành Bài Thi HSG",
+                `Chúc mừng <b>${studentName}</b> đã nộp bài thành công!<br><br>` +
+                `<div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-left font-mono space-y-1">` +
+                `<div>• Số câu đúng: <b>${correctCount}/${quiz.questions.length}</b></div>` +
+                `<div>• Điểm số: <b class="text-cyan-700 text-base">${score}/10</b></div>` +
+                `</div>`,
+                "fa-solid fa-trophy", "bg-amber-100 text-amber-600"
+            );
+
             exitQuiz();
+            renderLeaderboard();
         }
 
         function filterEssayGrade(grade) {
             state.currentEssayGrade = grade;
             document.querySelectorAll('.essay-grade-btn').forEach(b => {
-                b.className = "essay-grade-btn px-3.5 py-1.5 text-xs font-extrabold rounded-lg text-slate-700";
+                b.className = "essay-grade-btn px-4 py-2 text-xs font-extrabold rounded-lg text-slate-700 hover:bg-white";
             });
             const activeBtn = document.getElementById(`essay-grade-${grade}`);
-            if (activeBtn) activeBtn.className = "essay-grade-btn px-3.5 py-1.5 text-xs font-extrabold rounded-lg bg-cyan-600 text-white";
+            if (activeBtn) activeBtn.className = "essay-grade-btn px-4 py-2 text-xs font-extrabold rounded-lg bg-cyan-600 text-white shadow";
 
             renderEssayList();
         }
 
         function renderEssayList() {
-            const container = document.getElementById('essay-container');
+            const container = document.getElementById('essay-list-container');
             const items = essayData.filter(e => e.grade === state.currentEssayGrade);
 
             if (items.length === 0) {
-                container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white rounded-2xl border border-slate-200">Chưa có đề tự luận HSG cho Khối ${state.currentEssayGrade}. Vui lòng thêm đề mới!</div>`;
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 bg-white rounded-2xl border border-slate-200">Chưa có bài tập tự luận cho Khối ${state.currentEssayGrade}.</div>`;
                 return;
             }
 
             container.innerHTML = items.map(item => `
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                        <h3 class="font-extrabold text-slate-900 text-lg">${item.title}</h3>
-                        <span class="text-xs font-black bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full">Công Nghệ ${item.grade}</span>
+                        <span class="text-xs font-black px-3 py-1 bg-cyan-100 text-cyan-800 rounded-lg">Công Nghệ ${item.grade}</span>
+                        <span class="text-xs text-amber-700 font-bold bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-star mr-1"></i>Đề Vận Dụng Cao HSG</span>
                     </div>
 
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm text-slate-800 leading-relaxed font-medium">
-                        <p class="font-extrabold text-cyan-900 mb-1"><i class="fa-solid fa-file-code mr-1.5"></i> Yêu Cầu Đề Thi HSG:</p>
-                        ${item.problem.replace(/\n/g, '<br>')}
+                    <h3 class="text-lg font-black text-slate-900">${item.title}</h3>
+                    
+                    <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                        <span class="text-xs font-bold text-slate-500 uppercase"><i class="fa-solid fa-file-lines mr-1"></i> Đề Bài Kỹ Thuật:</span>
+                        <p class="text-sm text-slate-800 font-medium leading-relaxed">${item.problem}</p>
                     </div>
 
-                    <div class="flex items-center justify-between">
-                        <button onclick="toggleSolution('${item.id}')" class="px-4 py-2 text-xs font-bold bg-cyan-50 text-cyan-700 hover:bg-cyan-100 rounded-xl transition">
-                            <i class="fa-solid fa-key mr-1.5"></i> Xem Hướng Dẫn Giải Chi Tiết & Giả Mã
-                        </button>
-                        <span class="text-xs text-slate-400 font-medium">Thang điểm: ${item.rubric}</span>
+                    <div id="essay-solution-${item.id}" class="hidden p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-950 text-xs space-y-2">
+                        <span class="font-bold text-emerald-800 block"><i class="fa-solid fa-lightbulb mr-1"></i> Lời Giải Chi Tiết & Sơ Đồ Thiết Kế:</span>
+                        <p class="whitespace-pre-line leading-relaxed">${item.solution}</p>
+                        <div class="pt-2 border-t border-emerald-200 text-emerald-700 italic">Thang điểm/Rubric: ${item.rubric}</div>
                     </div>
 
-                    <div id="sol-${item.id}" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-950 leading-relaxed space-y-2">
-                        <p class="font-extrabold text-sm text-emerald-900"><i class="fa-solid fa-circle-check text-emerald-600 mr-1.5"></i> Lời Giải HSG & Sơ Đồ Thuật Toán:</p>
-                        <div>${item.solution}</div>
-                    </div>
+                    <button onclick="toggleEssaySolution('${item.id}')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-eye text-cyan-600"></i> Xem Hướng Dẫn Giải Chi Tiết
+                    </button>
                 </div>
             `).join('');
         }
 
-        function toggleSolution(id) {
-            const box = document.getElementById(`sol-${id}`);
-            if (box) box.classList.toggle('hidden');
-        }
-
-        function toggleTeacherPermissions() {
-            state.permissions.theory = document.getElementById('permEditTheory').checked;
-            state.permissions.quiz = document.getElementById('permEditQuiz').checked;
-            state.permissions.essay = document.getElementById('permEditEssay').checked;
-
-            document.getElementById('badge-perm-theory').textContent = state.permissions.theory ? 'Được phép' : 'Khóa';
-            document.getElementById('badge-perm-theory').className = state.permissions.theory ? 'text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-normal' : 'text-xs px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-normal';
-
-            document.getElementById('badge-perm-quiz').textContent = state.permissions.quiz ? 'Được phép' : 'Khóa';
-            document.getElementById('badge-perm-quiz').className = state.permissions.quiz ? 'text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-normal' : 'text-xs px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-normal';
-
-            document.getElementById('badge-perm-essay').textContent = state.permissions.essay ? 'Được phép' : 'Khóa';
-            document.getElementById('badge-perm-essay').className = state.permissions.essay ? 'text-xs px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-normal' : 'text-xs px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-normal';
-
-            renderAdminView();
+        function toggleEssaySolution(id) {
+            const solEl = document.getElementById(`essay-solution-${id}`);
+            if (solEl) solEl.classList.toggle('hidden');
         }
 
         function switchAdminSubtab(subtab) {
             state.currentAdminSubtab = subtab;
-            document.querySelectorAll('.admin-nav-btn').forEach(b => {
-                b.classList.remove('bg-cyan-50', 'text-cyan-700');
-                b.classList.add('text-slate-600');
-            });
-            const activeBtn = document.getElementById(`admin-subtab-${subtab}`);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-cyan-50', 'text-cyan-700');
-                activeBtn.classList.remove('text-slate-600');
-            }
+            document.querySelectorAll('.admin-form').forEach(f => f.classList.add('hidden'));
 
-            renderAdminView();
-        }
+            document.getElementById('admin-subtab-theory').className = "pb-3 text-xs font-extrabold text-slate-500 hover:text-purple-700";
+            document.getElementById('admin-subtab-quiz').className = "pb-3 text-xs font-extrabold text-slate-500 hover:text-purple-700";
+            document.getElementById('admin-subtab-essay').className = "pb-3 text-xs font-extrabold text-slate-500 hover:text-purple-700";
 
-        function renderAdminView() {
-            const container = document.getElementById('admin-editor-content');
-            const sub = state.currentAdminSubtab;
-            const isAllowed = state.permissions[sub];
-
-            if (!isAllowed) {
-                container.innerHTML = `
-                    <div class="p-8 text-center space-y-3">
-                        <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl font-bold">
-                            <i class="fa-solid fa-lock"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-slate-800">Chức Năng Biên Tập Này Đang Bị Khóa</h3>
-                        <p class="text-xs text-slate-500 max-w-sm mx-auto">Vui lòng tích chọn quyền chỉnh sửa tương ứng ở thanh Phân Quyền Giáo Viên phía trên để kích hoạt.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            if (sub === 'theory') {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        <h3 class="font-bold text-slate-900 text-base"><i class="fa-solid fa-plus-circle text-cyan-600 mr-1.5"></i> Thêm Bài Lý Thuyết SGK Công Nghệ</h3>
-                        <form onsubmit="handleAddTheory(event)" class="space-y-3 text-xs">
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="font-bold text-slate-700 block mb-1">Khối Lớp:</label>
-                                    <select id="admTheoryGrade" class="w-full p-2 border border-slate-300 rounded-lg focus:ring-cyan-500">
-                                        <option value="10">Công Nghệ 10</option>
-                                        <option value="11">Công Nghệ 11</option>
-                                        <option value="12">Công Nghệ 12</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="font-bold text-slate-700 block mb-1">Tên Chương/Bài SGK:</label>
-                                    <input type="text" id="admTheoryChapter" required placeholder="Chương 4: Vi Điều Khiển & AI" class="w-full p-2 border border-slate-300 rounded-lg">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Tiêu Đề Nội Dung:</label>
-                                <input type="text" id="admTheoryTitle" required placeholder="Lập Trình Điều Khiển Động Cơ Bước" class="w-full p-2 border border-slate-300 rounded-lg">
-                            </div>
-                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                                <span class="font-bold text-slate-800 block">Khung Ma Trận 4 Cấp Độ:</span>
-                                <input type="text" id="admMatrix1" placeholder="Mức 1: Nhận biết khái niệm..." class="w-full p-1.5 border border-slate-300 rounded">
-                                <input type="text" id="admMatrix2" placeholder="Mức 2: Thông hiểu nguyên lý..." class="w-full p-1.5 border border-slate-300 rounded">
-                                <input type="text" id="admMatrix3" placeholder="Mức 3: Vận dụng tính toán..." class="w-full p-1.5 border border-slate-300 rounded">
-                                <input type="text" id="admMatrix4" placeholder="Mức 4: Vận dụng cao / HSG..." class="w-full p-1.5 border border-slate-300 rounded">
-                            </div>
-                            <button type="submit" class="w-full py-2 bg-cyan-600 text-white font-bold rounded-lg hover:bg-cyan-700 transition">
-                                <i class="fa-solid fa-save mr-1"></i> Lưu Vào Ma Trận SGK
-                            </button>
-                        </form>
-                    </div>
-                `;
-            } else if (sub === 'quiz') {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        <h3 class="font-bold text-slate-900 text-base"><i class="fa-solid fa-plus-circle text-cyan-600 mr-1.5"></i> Thêm Đề Trắc Nghiệm HSG Công Nghệ</h3>
-                        <form onsubmit="handleAddQuiz(event)" class="space-y-3 text-xs">
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="font-bold text-slate-700 block mb-1">Chọn Khối Lớp:</label>
-                                    <select id="admQuizGrade" class="w-full p-2 border border-slate-300 rounded-lg">
-                                        <option value="10">Lớp 10</option>
-                                        <option value="11">Lớp 11</option>
-                                        <option value="12">Lớp 12</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="font-bold text-slate-700 block mb-1">Thời Gian (Phút):</label>
-                                    <input type="number" id="admQuizTime" value="15" class="w-full p-2 border border-slate-300 rounded-lg">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Tiêu Đề Bộ Đề Trắc Nghiệm:</label>
-                                <input type="text" id="admQuizTitle" required placeholder="Đề Thi HSG: Mạng Cảm Biến AI IoT" class="w-full p-2 border border-slate-300 rounded-lg">
-                            </div>
-                            <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                                <span class="font-bold text-slate-800 block">Nội Dung Câu Hỏi Mẫu:</span>
-                                <input type="text" id="admQText" required placeholder="Nhập câu hỏi trắc nghiệm kỹ thuật..." class="w-full p-1.5 border border-slate-300 rounded">
-                                <div class="grid grid-cols-2 gap-2">
-                                    <input type="text" id="admOptA" required placeholder="A. Lựa chọn 1" class="p-1.5 border border-slate-300 rounded">
-                                    <input type="text" id="admOptB" required placeholder="B. Lựa chọn 2" class="p-1.5 border border-slate-300 rounded">
-                                    <input type="text" id="admOptC" required placeholder="C. Lựa chọn 3" class="p-1.5 border border-slate-300 rounded">
-                                    <input type="text" id="admOptD" required placeholder="D. Lựa chọn 4" class="p-1.5 border border-slate-300 rounded">
-                                </div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <select id="admCorrectOpt" class="p-1.5 border border-slate-300 rounded">
-                                        <option value="0">Đáp án đúng: A</option>
-                                        <option value="1">Đáp án đúng: B</option>
-                                        <option value="2">Đáp án đúng: C</option>
-                                        <option value="3">Đáp án đúng: D</option>
-                                    </select>
-                                    <input type="text" id="admQExp" placeholder="Phân tích cơ sở kỹ thuật..." class="p-1.5 border border-slate-300 rounded">
-                                </div>
-                            </div>
-                            <button type="submit" class="w-full py-2 bg-cyan-600 text-white font-bold rounded-lg hover:bg-cyan-700 transition">
-                                <i class="fa-solid fa-save mr-1"></i> Cập Nhật Ngân Hàng Đề HSG
-                            </button>
-                        </form>
-                    </div>
-                `;
-            } else if (sub === 'essay') {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        <h3 class="font-bold text-slate-900 text-base"><i class="fa-solid fa-plus-circle text-cyan-600 mr-1.5"></i> Thêm Bài Tập Tự Luận / Đề HSG</h3>
-                        <form onsubmit="handleAddEssay(event)" class="space-y-3 text-xs">
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="font-bold text-slate-700 block mb-1">Khối Lớp:</label>
-                                    <select id="admEssayGrade" class="w-full p-2 border border-slate-300 rounded-lg">
-                                        <option value="10">Lớp 10</option>
-                                        <option value="11">Lớp 11</option>
-                                        <option value="12">Lớp 12</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="font-bold text-slate-700 block mb-1">Tiêu Đề Đề HSG:</label>
-                                    <input type="text" id="admEssayTitle" required placeholder="Đề Thi HSG: Thiết Kế Tay Máy Robot 3 Bậc DoF" class="w-full p-2 border border-slate-300 rounded-lg">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Nội Dung Yêu Cầu Đề Bài:</label>
-                                <textarea id="admEssayProblem" required rows="3" placeholder="Mô tả bài toán tự luận kỹ thuật..." class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
-                            </div>
-                            <div>
-                                <label class="font-bold text-slate-700 block mb-1">Hướng Dẫn Lời Giải & Thuật Toán:</label>
-                                <textarea id="admEssaySol" required rows="3" placeholder="Nhập lời giải chi tiết và công thức/mã lập trình..." class="w-full p-2 border border-slate-300 rounded-lg"></textarea>
-                            </div>
-                            <button type="submit" class="w-full py-2 bg-cyan-600 text-white font-bold rounded-lg hover:bg-cyan-700 transition">
-                                <i class="fa-solid fa-save mr-1"></i> Lưu Bài Tự Luận HSG
-                            </button>
-                        </form>
-                    </div>
-                `;
+            if (subtab === 'theory') {
+                document.getElementById('formAddTheory').classList.remove('hidden');
+                document.getElementById('admin-subtab-theory').className = "pb-3 text-xs font-extrabold text-purple-700 border-b-2 border-purple-600";
+            } else if (subtab === 'quiz') {
+                document.getElementById('formAddQuiz').classList.remove('hidden');
+                document.getElementById('admin-subtab-quiz').className = "pb-3 text-xs font-extrabold text-purple-700 border-b-2 border-purple-600";
+            } else if (subtab === 'essay') {
+                document.getElementById('formAddEssay').classList.remove('hidden');
+                document.getElementById('admin-subtab-essay').className = "pb-3 text-xs font-extrabold text-purple-700 border-b-2 border-purple-600";
             }
         }
 
@@ -1166,10 +1407,10 @@
                 chapter: chapter,
                 title: title,
                 matrix: { nhanBiet: m1, thongHieu: m2, vanDung: m3, vanDungCao: m4 },
-                contentHtml: `<p>Nội dung bài học môn Công nghệ đã được thêm bởi Giáo viên.</p>`
+                contentHtml: `<p>Nội dung bài học môn Công nghệ đã được thêm bởi Giáo viên <b>${state.teacherUser.name || ''}</b>.</p>`
             });
 
-            alert('Đã thêm bài lý thuyết môn Công nghệ thành công!');
+            showNotify("Thành Công", "Đã lưu thông tin bài học mới vào ma trận SGK môn Công nghệ!");
             renderTheoryList();
             e.target.reset();
         }
@@ -1205,7 +1446,7 @@
                 ]
             });
 
-            alert(`Đã thêm bộ đề trắc nghiệm HSG mới vào Công nghệ ${grade}!`);
+            showNotify("Thành Công", `Đã bổ sung bộ đề thi HSG mới vào Ngân hàng Lớp ${grade}!`);
             renderQuizList();
             e.target.reset();
         }
@@ -1226,9 +1467,145 @@
                 rubric: 'Đánh giá kỹ thuật bởi giáo viên'
             });
 
-            alert('Đã thêm bài tập tự luận HSG mới!');
+            showNotify("Thành Công", "Đã thêm câu hỏi tự luận HSG mới thành công!");
             renderEssayList();
             e.target.reset();
+        }
+
+        function showNotify(title, msg, iconClass = "fa-solid fa-circle-check", iconBg = "bg-cyan-100 text-cyan-600") {
+            document.getElementById('notifyTitle').textContent = title;
+            document.getElementById('notifyMessage').innerHTML = msg;
+            const iconEl = document.getElementById('notifyIcon');
+            iconEl.className = `w-12 h-12 rounded-full ${iconBg} flex items-center justify-center mx-auto text-xl font-bold`;
+            iconEl.innerHTML = `<i class="${iconClass}"></i>`;
+            document.getElementById('notifyModal').classList.remove('hidden');
+        }
+
+        function closeNotifyModal() {
+            document.getElementById('notifyModal').classList.add('hidden');
+        }
+
+        function openAuthModal(targetRole = null) {
+            const role = targetRole || state.currentRole;
+            const modal = document.getElementById('authModal');
+            const studentForm = document.getElementById('studentAuthForm');
+            const teacherForm = document.getElementById('teacherAuthForm');
+            const title = document.getElementById('authModalTitle');
+            const subtitle = document.getElementById('authModalSubtitle');
+            const icon = document.getElementById('authModalIcon');
+
+            if (role === 'teacher') {
+                title.textContent = "Đăng Nhập Giáo Viên";
+                subtitle.textContent = "Xác thực quyền chỉnh sửa nội dung SGK & Bộ đề";
+                icon.className = "w-9 h-9 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold";
+                icon.innerHTML = `<i class="fa-solid fa-user-tie"></i>`;
+                studentForm.classList.add('hidden');
+                teacherForm.classList.remove('hidden');
+            } else {
+                title.textContent = "Đăng Nhập Học Sinh";
+                subtitle.textContent = "Nhập thông tin để ghi nhận điểm & thi xếp hạng";
+                icon.className = "w-9 h-9 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold";
+                icon.innerHTML = `<i class="fa-solid fa-user-graduate"></i>`;
+                studentForm.classList.remove('hidden');
+                teacherForm.classList.add('hidden');
+
+                if (state.currentUser.isLoggedIn) {
+                    document.getElementById('studentNameInput').value = state.currentUser.name;
+                    document.getElementById('studentClassInput').value = state.currentUser.schoolClass;
+                }
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function handleStudentLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('studentNameInput').value.trim();
+            const schoolClass = document.getElementById('studentClassInput').value.trim();
+
+            if (!name || !schoolClass) return;
+
+            state.currentUser.name = name;
+            state.currentUser.schoolClass = schoolClass;
+            state.currentUser.isLoggedIn = true;
+
+            updateUserUI();
+            closeAuthModal();
+            showNotify("Đăng Nhập Thành Công", `Chào mừng học sinh <b>${name}</b> (${schoolClass}) đã tham gia hệ thống ôn luyện HSG Công Nghệ!`);
+            
+            renderLeaderboard();
+        }
+
+        function handleTeacherLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('teacherNameInput').value.trim();
+            const pass = document.getElementById('teacherPassInput').value.trim();
+
+            if (pass === '123456' || pass === 'giaovien') {
+                state.teacherUser.name = name;
+                state.teacherUser.isLoggedIn = true;
+                state.currentRole = 'teacher';
+
+                updateUserUI();
+                closeAuthModal();
+                showNotify("Xác Thực Giáo Viên Thành Công", `Xin chào thầy/cô <b>${name}</b>. Quyền quản trị biên tập đề thi đã được kích hoạt!`, "fa-solid fa-user-shield", "bg-purple-100 text-purple-700");
+
+                switchTab('admin');
+            } else {
+                showNotify("Xác Thực Thất Bại", "Mật khẩu quản trị giáo viên không chính xác (Thử: 123456 hoặc giaovien)!", "fa-solid fa-triangle-exclamation", "bg-rose-100 text-rose-600");
+            }
+        }
+
+        function renderLeaderboard() {
+            const tbody = document.getElementById('leaderboardTableBody');
+            if (!tbody) return;
+
+            const sorted = [...state.leaderboard].sort((a, b) => b.avgScore - a.avgScore);
+
+            tbody.innerHTML = sorted.map((item, index) => {
+                let medalHtml = `<span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 font-extrabold inline-flex items-center justify-center">${index + 1}</span>`;
+                if (index === 0) medalHtml = `<span class="w-6 h-6 rounded-lg bg-amber-400 text-amber-950 font-black inline-flex items-center justify-center shadow"><i class="fa-solid fa-crown text-xs"></i></span>`;
+                if (index === 1) medalHtml = `<span class="w-6 h-6 rounded-lg bg-slate-300 text-slate-900 font-black inline-flex items-center justify-center shadow">2</span>`;
+                if (index === 2) medalHtml = `<span class="w-6 h-6 rounded-lg bg-amber-700 text-amber-100 font-black inline-flex items-center justify-center shadow">3</span>`;
+
+                const isCurrent = state.currentUser.isLoggedIn && item.name === state.currentUser.name;
+
+                return `
+                    <tr class="${isCurrent ? 'bg-cyan-50/80 font-bold text-cyan-950' : 'hover:bg-slate-50'}">
+                        <td class="py-3 px-3">${medalHtml}</td>
+                        <td class="py-3 px-3">
+                            ${item.name} ${isCurrent ? '<span class="text-[10px] bg-cyan-600 text-white px-1.5 py-0.5 rounded-full ml-1">Bạn</span>' : ''}
+                        </td>
+                        <td class="py-3 px-3 text-slate-500">${item.schoolClass}</td>
+                        <td class="py-3 px-3 text-center">${item.testCount}</td>
+                        <td class="py-3 px-3 text-right font-black text-cyan-700">${item.avgScore}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            const historyContainer = document.getElementById('studentHistoryList');
+            if (historyContainer) {
+                if (state.studentHistory.length === 0) {
+                    historyContainer.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">Chưa có lịch sử làm bài. Hãy chọn một bộ đề trắc nghiệm để bắt đầu!</div>`;
+                } else {
+                    historyContainer.innerHTML = state.studentHistory.map(h => `
+                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-extrabold text-slate-800 text-xs">${h.title}</span>
+                                <span class="font-black text-xs text-cyan-700 bg-cyan-100 px-2 py-0.5 rounded-lg">${h.score}/10</span>
+                            </div>
+                            <div class="flex items-center justify-between text-[11px] text-slate-500">
+                                <span>Đúng ${h.correctCount}/${h.total} câu</span>
+                                <span>${h.date}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
         }
 
         function initCharts() {
@@ -1263,6 +1640,15 @@
                 });
             }
         }
+
+        // Initialize App on DOM Load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTheoryList();
+            renderQuizList();
+            renderEssayList();
+            renderLeaderboard();
+            initCharts();
+        });
     </script>
 </body>
 </html>
