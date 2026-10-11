@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CÔNG NGHỆ HSG AI - Luyện Thi Học Sinh Giỏi Môn Công Nghệ THPT</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Lexend', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // --- DATABASE KHỞI TẠO TỪ TÀI LIỆU CÔNG NGHỆ 10 ---
+        const INITIAL_THEORY_DATA = [
+            {
+                id: "ch1",
+                title: "Chương I: Đại Cương Về Công Nghệ",
+                lessons: [
+                    {
+                        id: "b1",
+                        title: "Bài 1: Công nghệ và đời sống",
+                        objectives: "Nêu được khái niệm khoa học, kỹ thuật, công nghệ và mối liên hệ; Mô tả mối quan hệ giữa công nghệ với tự nhiên, con người, xã hội.",
+                        keyKnowledge: "Khoa học là hệ thống tri thức về quy luật vận động của vật chất. Kỹ thuật ứng dụng nguyên lý khoa học vào thiết kế, chế tạo. Công nghệ là giải pháp/quy trình biến đổi nguồn lực thành sản phẩm.",
+                        terms: [
+                            { term: "Khoa học tự nhiên", desc: "Mục đích nhận thức, mô tả, giải thích quy luật tự nhiên dựa trên thực nghiệm." },
+                            { term: "Kỹ thuật (Engineering)", desc: "Ứng dụng khoa học để thiết kế, chế tạo máy móc, hệ thống một cách kinh tế nhất." },
+                            { term: "Công nghệ (Technology)", desc: "Kết quả của hoạt động kỹ thuật, có tính chuyển giao và liên tục đổi mới." }
+                        ],
+                        comparisons: [
+                            { aspect: "Bản chất", science: "Tìm tòi, khám phá quy luật", eng: "Ứng dụng tri thức tạo giải pháp", tech: "Quy trình, giải pháp tạo sản phẩm" },
+                            { aspect: "Sản phẩm", science: "Tri thức, định luật, học thuyết", eng: "Bản vẽ, thiết kế, nguyên mẫu", tech: "Quy trình, sản phẩm, dịch vụ thực tế" }
+                        ],
+                        pitfalls: "Nhầm lẫn giữa Kỹ thuật và Công nghệ. Kỹ thuật là quá trình ứng dụng nguyên lý; Công nghệ là phương pháp/quy trình đạt được mục tiêu sản xuất.",
+                        selfQuestions: [
+                            "Phân tích mối quan hệ 2 chiều giữa Khoa học và Công nghệ?",
+                            "Vì sao nói công nghệ là con dao 2 lưỡi đối với tự nhiên và xã hội?"
+                        ]
+                    },
+                    {
+                        id: "b2",
+                        title: "Bài 2: Hệ thống kỹ thuật",
+                        objectives: "Trình bày được khái niệm và cấu trúc của hệ thống kỹ thuật (Mạch hở & Mạch kín).",
+                        keyKnowledge: "Hệ thống kỹ thuật gồm 3 phần tử chính: Đầu vào (Vật liệu, năng lượng, thông tin) -> Bộ phận xử lý (Biến đổi, vận chuyển, lưu trữ) -> Đầu ra. Mạch kín có tín hiệu phản hồi (Feedback) giúp tự điều chỉnh.",
+                        terms: [
+                            { term: "Mạch hở", desc: "Tín hiệu đầu ra không ảnh hưởng ngược lại đến quá trình xử lý đầu vào." },
+                            { term: "Mạch kín", desc: "Có đường phản hồi tín hiệu đầu ra về bộ xử lý để so sánh và tự động điều chỉnh." }
+                        ],
+                        comparisons: [
+                            { aspect: "Đặc điểm", open: "Không có phản hồi, đơn giản, chi phí thấp", closed: "Có phản hồi, chính xác cao, tự động điều chỉnh" },
+                            { aspect: "Ví dụ", open: "Máy tăng âm, quạt máy thông thường", closed: "Máy điều hòa nhiệt độ, lò nướng tự động" }
+                        ],
+                        pitfalls: "Quên xác định rõ bản chất của tín hiệu phản hồi trong hệ thống mạch kín.",
+                        selfQuestions: [
+                            "Vẽ sơ đồ khối hệ thống cảnh báo cháy tự động và phân loại mạch?",
+                            "Nêu chức năng của bộ phận xử lý trong máy xát gạo?"
+                        ]
+                    },
+                    {
+                        id: "b3",
+                        title: "Bài 3: Công nghệ phổ biến",
+                        objectives: "Nắm vững các công nghệ trong luyện kim, đúc, cắt gọt, gia công áp lực, hàn, sản xuất điện năng, điện quang, điện cơ, tự động hóa và truyền thông không dây.",
+                        keyKnowledge: "Phân biệt các phương pháp gia công cơ khí (Đúc, Cắt gọt, Cán/Kéo/Rèn/Dập, Hàn). Hiểu các nguyên lý biến đổi năng lượng và tự động hóa.",
+                        terms: [
+                            { term: "Gia công cắt gọt", desc: "Bóc tách lớp kim loại dư dưới dạng phoi nhờ dụng cụ cắt (Tiện, Phay, Mài...)." },
+                            { term: "Gia công áp lực", desc: "Tận dụng tính dẻo của kim loại, dùng ngoại lực làm biến dạng (Cán, Kéo, Rèn, Dập)." },
+                            { term: "Đúc áp lực / Li tâm", desc: "Rót kim loại lỏng vào khuôn đúc dưới áp lực hoặc lực quay li tâm." }
+                        ],
+                        comparisons: [
+                            { aspect: "Phương pháp", cut: "Cắt gọt phoi, độ chính xác cao", press: "Biến dạng dẻo, không tạo phoi", weld: "Nóng chảy/dẻo nối chi tiết" }
+                        ],
+                        pitfalls: "Không phân biệt được hàn nóng chảy và hàn áp lực.",
+                        selfQuestions: [
+                            "So sánh ưu nhược điểm của công nghệ đúc khuôn cát và đúc trong khuôn kim loại?"
+                        ]
+                    },
+                    {
+                        id: "b4",
+                        title: "Bài 4: Một số công nghệ mới",
+                        objectives: "Trình bày bản chất và ứng dụng của Công nghệ Nano, CAD/CAM/CNC, In 3D, Năng lượng tái tạo, AI, IoT, Robot thông minh.",
+                        keyKnowledge: "CAD (Thiết kế trên máy tính) -> CAM (Lập quy trình gia công) -> CNC (Điều khiển máy gia công tự động). In 3D phân tách mô hình 3D thành các lớp 2D đắp dần.",
+                        terms: [
+                            { term: "Công nghệ Nano", desc: "Chế tạo và phân tích vật liệu ở kích thước 1-100 nm." },
+                            { term: "In 3D (Additive Manufacturing)", desc: "Tạo sản phẩm bằng cách đắp chồng tuần tự từng lớp vật liệu." }
+                        ],
+                        comparisons: [
+                            { aspect: "Gia công CNC vs In 3D", cnc: "Gia công bóc tách (Subtractive)", print3d: "Gia công cộng/đắp dần (Additive)" }
+                        ],
+                        pitfalls: "Nhầm lẫn giữa phần mềm CAD và phần mềm CAM.",
+                        selfQuestions: [
+                            "Trình bày chuỗi quy trình tích hợp CAD/CAM/CNC trong chế tạo khuôn mẫu?"
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        const INITIAL_MCQ_QUESTIONS = [
+            {
+                id: "q1",
+                topicId: "b2",
+                difficulty: "Vận dụng cao",
+                points: 10,
+                question: "Trong một hệ thống sấy hạt nông sản tự động duy trì nhiệt độ ở $60^\\circ\\text{C}$, bộ phận cảm biến nhiệt độ đo được giá trị $65^\\circ\\text{C}$ và truyền tín hiệu về tủ điều khiển. Hệ thống này thuộc loại hệ thống kỹ thuật nào và xử lý ra sao?",
+                options: [
+                    "Hệ thống mạch hở; bộ điều khiển tăng công suất điện trở nhiệt.",
+                    "Hệ thống mạch kín; tín hiệu phản hồi giúp bộ điều khiển ngắt hoặc giảm nguồn nhiệt.",
+                    "Hệ thống mạch hở; hệ thống tự ngắt nguồn điện cấp toàn bộ.",
+                    "Hệ thống mạch kín; bộ điều khiển tăng tốc độ quạt mà không thay đổi nhiệt độ."
+                ],
+                correctIndex: 1,
+                hint1: "Hãy chú ý đến sự xuất hiện của cảm biến đo nhiệt độ thực tế truyền ngược về tủ điều khiển.",
+                hint2: "Đây là cơ chế so sánh giữa giá trị đặt ($60^\\circ\\text{C}$) và giá trị thực tế ($65^\\circ\\text{C}$) để đưa ra tác động điều chỉnh.",
+                rationale: "Hệ thống có cảm biến đo đầu ra gửi tín hiệu về đầu vào là hệ thống mạch kín. Khi nhiệt độ thực tế ($65^\\circ\\text{C}$) cao hơn cài đặt ($60^\\circ\\text{C}$), tín hiệu phản hồi giúp bộ điều khiển giảm/ngắt nhiệt để đưa nhiệt độ về ngưỡng chuẩn.",
+                source: "SGK Công nghệ 10 - Bài 2"
+            },
+            {
+                id: "q2",
+                topicId: "b3",
+                difficulty: "Thông hiểu",
+                points: 5,
+                question: "Phương pháp gia công nào dưới đây dựa trên tính dẻo của kim loại, dùng ngoại lực làm kim loại biến dạng theo hình dáng yêu cầu mà không bóc tách phoi?",
+                options: [
+                    "Gia công cắt gọt (Tiện, Phay)",
+                    "Gia công áp lực (Cán, Kéo, Rèn, Dập)",
+                    "Công nghệ đúc li tâm",
+                    "Công nghệ hàn hồ quang"
+                ],
+                correctIndex: 1,
+                hint1: "Phương pháp này biến đổi hình dạng chi tiết nhờ biến dạng dẻo dưới tác dụng của lực nén/kéo.",
+                hint2: "Ví dụ điển hình là rèn rựa, dập thân vỏ ô tô hoặc cán thép thanh.",
+                rationale: "Gia công áp lực tận dụng tính dẻo của kim loại dưới tác dụng của ngoại lực (dập, cán, kéo, rèn) để tạo hình dạng mong muốn mà không loại bỏ phần dư dưới dạng phoi.",
+                source: "SGK Công nghệ 10 - Bài 3"
+            },
+            {
+                id: "q3",
+                topicId: "b4",
+                difficulty: "Vận dụng",
+                points: 8,
+                question: "Quy trình sản xuất cơ khí hiện đại tích hợp CAD/CAM/CNC tuân theo thứ tự thực hiện đúng nào sau đây?",
+                options: [
+                    "Thiết kế chi tiết (CAD) $\\rightarrow$ Lập quy trình gia công (CAM) $\\rightarrow$ Gia công trên máy điều khiển số (CNC)",
+                    "Gia công tự động (CNC) $\\rightarrow$ Thiết kế 3D (CAD) $\\rightarrow$ Lập chương trình (CAM)",
+                    "Lập chương trình gia công (CAM) $\\rightarrow$ Thiết kế chi tiết (CAD) $\\rightarrow$ Chạy máy (CNC)",
+                    "Thiết kế chi tiết (CAD) $\\rightarrow$ Gia công CNC $\\rightarrow$ Kiểm tra bằng phần mềm (CAM)"
+                ],
+                correctIndex: 0,
+                hint1: "Cần có bản vẽ thiết kế trước, sau đó mới tính toán đường chạy dao/lập trình gia công, cuối cùng mới đưa vào máy chạy.",
+                hint2: "CAD = Computer Aided Design; CAM = Computer Aided Manufacturing; CNC = Computer Numerical Control.",
+                rationale: "Thứ tự chính xác: CAD tạo mô hình 3D/bản vẽ $\\rightarrow$ CAM chuyển đổi mô hình thành mã lệnh/quy trình gia công $\\rightarrow$ Máy CNC đọc mã lệnh để gia công chi tiết thực tế.",
+                source: "SGK Công nghệ 10 - Bài 4"
+            },
+            {
+                id: "q4",
+                topicId: "b1",
+                difficulty: "Nhận biết",
+                points: 5,
+                question: "Khoa học, kỹ thuật và công nghệ có mối liên hệ mật thiết. Phát biểu nào sau đây thể hiện ĐÚNG vai trò của công nghệ đối với khoa học?",
+                options: [
+                    "Công nghệ là cơ sở duy nhất tạo ra các định luật tự nhiên.",
+                    "Công nghệ cung cấp thiết bị, công cụ đo lường hiện đại giúp thúc đẩy nghiên cứu khoa học.",
+                    "Khoa học phụ thuộc hoàn toàn vào công nghệ và không thể phát triển độc lập.",
+                    "Công nghệ chỉ làm nhiệm vụ tiêu thụ các phát minh khoa học."
+                ],
+                correctIndex: 1,
+                hint1: "Hãy nhớ lại ví dụ về kính thiên văn điện tử hoặc kính hiển vi nano trợ giúp các nhà khoa học.",
+                hint2: "Sự phát triển của công nghệ tạo ra công cụ đắc lực nâng cao năng lực quan sát, thực nghiệm khoa học.",
+                rationale: "Công nghệ thúc đẩy khoa học phát triển bằng cách tạo ra các thiết bị, phương tiện đo lường, phân tích hiện đại (như kính hiển vi điện tử, máy gia tốc hạt...).",
+                source: "SGK Công nghệ 10 - Bài 1"
+            }
+        ];
+
+        const INITIAL_ESSAY_QUESTIONS = [
+            {
+                id: "eq1",
+                topicId: "b2",
+                title: "Phân tích hệ thống kỹ thuật điều hòa không khí inverter trong gia đình",
+                difficulty: "Vận dụng cao",
+                maxScore: 20,
+                prompt: "Hãy phân tích hệ thống kỹ thuật của một chiếc điều hòa nhiệt độ Inverter tự động duy trì nhiệt độ phòng:\n1. Xác định các phần tử Tín hiệu đầu vào, Bộ phận xử lý, Đầu ra.\n2. Phân tích nguyên lý làm việc và giải thích tại sao đây là hệ thống kỹ thuật mạch kín.\n3. Nêu ưu điểm vượt trội của cơ chế phản hồi trong hệ thống này so với mạch hở.",
+                rubric: [
+                    { criterion: "Xác định đúng Đầu vào, Bộ xử lý, Đầu ra", score: 5 },
+                    { criterion: "Phân tích rõ nguyên lý hoạt động & tín hiệu phản hồi (Mạch kín)", score: 8 },
+                    { criterion: "So sánh chính xác ưu điểm tiết kiệm năng lượng & ổn định nhiệt độ", score: 7 }
+                ],
+                suggestedAnswer: "1. Đầu vào: Điện năng, Nhiệt độ cài đặt từ điều khiển, Tín hiệu nhiệt độ thực tế phòng từ cảm biến. Bộ xử lý: Vi điều khiển Inverter biến đổi tần số dòng điện cấp cho máy nén. Đầu ra: Luồng không khí lạnh, Nhiệt độ phòng đạt chuẩn.\n2. Đây là hệ thống mạch kín vì cảm biến nhiệt độ liên tục đo nhiệt độ phòng (đầu ra) phản hồi về vi điều khiển để so sánh với nhiệt độ cài đặt. Khi chênh lệch lớn, máy nén quay nhanh; khi gần đạt chuẩn, máy nén giảm tốc độ.\n3. Ưu điểm: Nhiệt độ phòng luôn ổn định, tránh dao động lớn, tiết kiệm điện năng tới 30-50% và kéo dài tuổi thọ thiết bị."
+            }
+        ];
+
+        const INITIAL_LEADERBOARD = [
+            { id: "u1", name: "Nguyễn Văn An", class: "10 Chuyên Lý", points: 125, completedCount: 15, accuracy: 93, timeAchieved: "2026-10-10 14:20" },
+            { id: "u2", name: "Trần Thị Mai", class: "10A1", points: 110, completedCount: 14, accuracy: 88, timeAchieved: "2026-10-11 09:15" },
+            { id: "u3", name: "Lê Hoàng Nam", class: "10 Chuyên Tin", points: 95, completedCount: 12, accuracy: 85, timeAchieved: "2026-10-09 16:45" }
+        ];
+
+        // --- MAIN APP COMPONENT ---
+        function App() {
+            // State quản lý người dùng
+            const [user, setUser] = useState(() => {
+                const saved = localStorage.getItem('hsg_tech_user');
+                return saved ? JSON.parse(saved) : { name: "", role: "student", score: 0, completedCount: 0, correctCount: 0, history: [], bookmarks: [] };
+            });
+
+            const [activeTab, setActiveTab] = useState("home"); // home, theory, mcq, essay, ai_chat, leaderboard, admin, settings
+            const [theoryData, setTheoryData] = useState(INITIAL_THEORY_DATA);
+            const [mcqQuestions, setMcqQuestions] = useState(INITIAL_MCQ_QUESTIONS);
+            const [essayQuestions, setEssayQuestions] = useState(INITIAL_ESSAY_QUESTIONS);
+            const [leaderboard, setLeaderboard] = useState(INITIAL_LEADERBOARD);
+
+            // Settings State
+            const [apiKey, setApiKey] = useState(() => localStorage.getItem('gemini_api_key') || "");
+
+            // Save user to localStorage
+            useEffect(() => {
+                if (user.name) {
+                    localStorage.setItem('hsg_tech_user', JSON.stringify(user));
+                    // Update leaderboard
+                    setLeaderboard(prev => {
+                        const existing = prev.find(p => p.name === user.name);
+                        const accuracy = user.completedCount > 0 ? Math.round((user.correctCount / user.completedCount) * 100) : 0;
+                        if (existing) {
+                            return prev.map(p => p.name === user.name ? { ...p, points: user.score, completedCount: user.completedCount, accuracy } : p);
+                        } else {
+                            return [...prev, { id: 'u_' + Date.now(), name: user.name, class: "Học sinh THPT", points: user.score, completedCount: user.completedCount, accuracy, timeAchieved: new Date().toISOString().slice(0, 16).replace('T', ' ') }];
+                        }
+                    });
+                }
+            }, [user]);
+
+            // Save API key
+            const handleSaveApiKey = (key) => {
+                setApiKey(key);
+                localStorage.setItem('gemini_api_key', key);
+                alert("Đã lưu API Key thành công!");
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col bg-slate-50">
+                    {/* Header */}
+                    <header className="bg-gradient-to-r from-blue-700 via-indigo-700 to-teal-600 text-white shadow-lg sticky top-0 z-50">
+                        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+                            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab("home")}>
+                                <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center text-amber-300 font-bold text-xl border border-white/30">
+                                    <i className="fa-solid fa-microchip"></i>
+                                </div>
+                                <div>
+                                    <h1 className="font-bold text-lg md:text-xl tracking-tight leading-none">CÔNG NGHỆ HSG AI</h1>
+                                    <p className="text-xs text-blue-100 opacity-90">Luyện Thi Học Sinh Giỏi THPT</p>
+                                </div>
+                            </div>
+
+                            {/* User Bar */}
+                            <div className="flex items-center space-x-4">
+                                {user.name ? (
+                                    <div className="flex items-center space-x-3 bg-white/10 px-3 py-1.5 rounded-full border border-white/20 text-sm">
+                                        <div className="w-7 h-7 rounded-full bg-amber-400 text-slate-900 font-bold flex items-center justify-center text-xs">
+                                            {user.name.charAt(0).toUpperCase()}
+                                        </div>
+                                        <span className="font-medium hidden sm:inline">{user.name}</span>
+                                        <span className="bg-amber-300 text-slate-900 text-xs font-bold px-2 py-0.5 rounded-full">
+                                            <i className="fa-solid fa-star text-amber-600 mr-1"></i>{user.score} đ
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <button onClick={() => setActiveTab("home")} className="text-xs bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold px-3 py-1.5 rounded-lg transition">
+                                        Đăng nhập
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Navigation Tabs */}
+                        <nav className="bg-blue-800/60 backdrop-blur-md border-t border-white/10 px-4 overflow-x-auto custom-scrollbar">
+                            <div className="max-w-7xl mx-auto flex space-x-1 sm:space-x-4 text-xs sm:text-sm font-medium whitespace-nowrap py-2">
+                                <button onClick={() => setActiveTab("home")} className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-2 ${activeTab === "home" ? "bg-white text-blue-800 font-bold shadow" : "text-blue-100 hover:bg-white/10"}`}>
+                                    <i className="fa-solid fa-house"></i><span>Trang chủ</span>
+                                </button>
+                                <button onClick={() => setActiveTab("theory")} className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-2 ${activeTab === "theory" ? "bg-white text-blue-800 font-bold shadow" : "text-blue-100 hover:bg-white/10"}`}>
+                                    <i className="fa-solid fa-book-open"></i><span>Lý thuyết Chuyên đề</span>
+                                </button>
+                                <button onClick={() => setActiveTab("mcq")} className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-2 ${activeTab === "mcq" ? "bg-white text-blue-800 font-bold shadow" : "text-blue-100 hover:bg-white/10"}`}>
+                                    <i className="fa-solid fa-list-check"></i><span>Luyện Trắc Nghiệm</span>
+                                </button>
+                                <button onClick={() => setActiveTab("essay")} className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-2 ${activeTab === "essay" ? "bg-white text-blue-800 font-bold shadow" : "text-blue-100 hover:bg-white/10"}`}>
+                                    <i className="fa-solid fa-pen-nib"></i><span>Luyện Tự Luận HSG</span>
+                                </button>
+                                <button onClick={() => setActiveTab("ai_chat")} className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-2 ${activeTab === "ai_chat" ? "bg-white text-blue-800 font-bold shadow" : "text-blue-100 hover:bg-white/10"}`}>
+                                    <i className="fa-solid fa-robot text-amber-300"></i><span>Trợ lý AI HSG</span>
+                                </button>
+                                <button onClick={() => setActiveTab("leaderboard")} className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-2 ${activeTab === "leaderboard" ? "bg-white text-blue-800 font-bold shadow" : "text-blue-100 hover:bg-white/10"}`}>
+                                    <i className="fa-solid fa-trophy text-amber-300"></i><span>Bảng Xếp Hạng</span>
+                                </button>
+                                <button onClick={() => setActiveTab("admin")} className={`px-3 py-1.5 rounded-lg transition flex items-center space-x-2 ${activeTab === "admin" ? "bg-white text-blue-800 font-bold shadow" : "text-blue-100 hover:bg-white/10"}`}>
+                                    <i className="fa-solid fa-user-gear"></i><span>Quản trị Giáo viên</span>
+                                </button>
+                            </div>
+                        </nav>
+                    </header>
+
+                    {/* Main Content Area */}
+                    <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+                        {activeTab === "home" && <HomeTab user={user} setUser={setUser} setActiveTab={setActiveTab} leaderboard={leaderboard} />}
+                        {activeTab === "theory" && <TheoryTab theoryData={theoryData} user={user} setUser={setUser} />}
+                        {activeTab === "mcq" && <McqPracticeTab mcqQuestions={mcqQuestions} user={user} setUser={setUser} apiKey={apiKey} />}
+                        {activeTab === "essay" && <EssayPracticeTab essayQuestions={essayQuestions} user={user} setUser={setUser} apiKey={apiKey} />}
+                        {activeTab === "ai_chat" && <AiChatTab apiKey={apiKey} user={user} theoryData={theoryData} />}
+                        {activeTab === "leaderboard" && <LeaderboardTab leaderboard={leaderboard} user={user} />}
+                        {activeTab === "admin" && <AdminTab mcqQuestions={mcqQuestions} setMcqQuestions={setMcqQuestions} essayQuestions={essayQuestions} setEssayQuestions={setEssayQuestions} theoryData={theoryData} setTheoryData={setTheoryData} leaderboard={leaderboard} setApiKey={handleSaveApiKey} currentApiKey={apiKey} />}
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 mt-auto">
+                        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
+                            <div className="flex items-center space-x-2">
+                                <i className="fa-solid fa-graduation-cap text-teal-400 text-base"></i>
+                                <span className="font-semibold text-slate-200">Ứng dụng AI Ôn Thi Học Sinh Giỏi THPT - Môn Công Nghệ</span>
+                            </div>
+                            <p>© 2026 CÔNG NGHỆ HSG AI. Phát triển cho Kỳ thi Học sinh giỏi Quốc gia & Tỉnh/Thành phố.</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // 1. TRANG CHỦ & HỒ SƠ HỌC SINH
+        // ==========================================
+        function HomeTab({ user, setUser, setActiveTab, leaderboard }) {
+            const [inputName, setInputName] = useState(user.name || "");
+
+            const handleStart = (e) => {
+                e.preventDefault();
+                if (!inputName.trim()) return alert("Vui lòng nhập họ tên hoặc biệt danh học tập!");
+                setUser(prev => ({ ...prev, name: inputName.trim() }));
+            };
+
+            const accuracy = user.completedCount > 0 ? Math.round((user.correctCount / user.completedCount) * 100) : 0;
+            const myRank = useMemo(() => {
+                const sorted = [...leaderboard].sort((a, b) => b.points - a.points || b.accuracy - a.accuracy);
+                const index = sorted.findIndex(s => s.name === user.name);
+                return index !== -1 ? index + 1 : "Chưa xếp hạng";
+            }, [leaderboard, user.name]);
+
+            return (
+                <div className="space-y-6">
+                    {/* Welcome Banner */}
+                    <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-teal-500 rounded-2xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+                        <div className="absolute right-0 top-0 opacity-10 translate-x-10 -translate-y-10">
+                            <i className="fa-solid fa-brain text-[220px]"></i>
+                        </div>
+                        <div className="max-w-2xl relative z-10 space-y-4">
+                            <span className="bg-white/20 text-amber-300 text-xs font-semibold px-3 py-1 rounded-full border border-white/20 backdrop-blur-sm">
+                                <i className="fa-solid fa-sparkles mr-1"></i>Trợ Lý Gia Sư AI Đồng Hành
+                            </span>
+                            <h2 className="text-2xl md:text-4xl font-extrabold tracking-tight">
+                                Bứt Phá Điểm Số Thi Học Sinh Giỏi Môn Công Nghệ THPT
+                            </h2>
+                            <p className="text-blue-100 text-sm md:text-base leading-relaxed">
+                                Hệ thống hóa lý thuyết chuẩn SGK Kết nối tri thức, luyện tập tư duy phản biện với thuật toán Socratic AI gợi mở thông minh, không tiết lộ lời giải trực tiếp.
+                            </p>
+
+                            {!user.name ? (
+                                <form onSubmit={handleStart} className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 pt-2">
+                                    <input
+                                        type="text"
+                                        placeholder="Nhập Họ và Tên học sinh..."
+                                        value={inputName}
+                                        onChange={(e) => setInputName(e.target.value)}
+                                        className="w-full sm:w-72 px-4 py-3 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-400 font-medium shadow"
+                                    />
+                                    <button type="submit" className="w-full sm:w-auto bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold px-6 py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                                        <span>Bắt đầu Học Tập</span>
+                                        <i className="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </form>
+                            ) : (
+                                <div className="pt-2 flex flex-wrap gap-3">
+                                    <button onClick={() => setActiveTab("mcq")} className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-bold px-5 py-2.5 rounded-xl shadow-md transition flex items-center space-x-2">
+                                        <i className="fa-solid fa-play"></i><span>Luyện Trắc Nghiệm Ngay</span>
+                                    </button>
+                                    <button onClick={() => setActiveTab("essay")} className="bg-white/20 hover:bg-white/30 text-white font-semibold px-5 py-2.5 rounded-xl border border-white/30 backdrop-blur-sm transition flex items-center space-x-2">
+                                        <i className="fa-solid fa-pen-to-square"></i><span>Giải Tự Luận HSG</span>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Progress Overview Grid */}
+                    {user.name && (
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200/80 flex items-center space-x-4">
+                                <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">
+                                    <i className="fa-solid fa-coins"></i>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-slate-500 font-medium">Tổng điểm tích lũy</p>
+                                    <p className="text-xl font-extrabold text-slate-800">{user.score} <span className="text-xs text-slate-400">điểm</span></p>
+                                </div>
+                            </div>
+                            <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200/80 flex items-center space-x-4">
+                                <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">
+                                    <i className="fa-solid fa-circle-check"></i>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-slate-500 font-medium">Câu đã hoàn thành</p>
+                                    <p className="text-xl font-extrabold text-slate-800">{user.completedCount} <span className="text-xs text-slate-400">câu</span></p>
+                                </div>
+                            </div>
+                            <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200/80 flex items-center space-x-4">
+                                <div className="w-12 h-12 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold">
+                                    <i className="fa-solid fa-bullseye"></i>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-slate-500 font-medium">Tỷ lệ chính xác</p>
+                                    <p className="text-xl font-extrabold text-slate-800">{accuracy}%</p>
+                                </div>
+                            </div>
+                            <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200/80 flex items-center space-x-4">
+                                <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                                    <i className="fa-solid fa-trophy"></i>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-slate-500 font-medium">Thứ hạng hiện tại</p>
+                                    <p className="text-xl font-extrabold text-slate-800">#{myRank}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Features Hub */}
+                    <div className="grid md:grid-cols-3 gap-6">
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-3 hover:border-blue-400 transition cursor-pointer" onClick={() => setActiveTab("theory")}>
+                            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold">
+                                <i className="fa-solid fa-book"></i>
+                            </div>
+                            <h3 className="font-bold text-lg text-slate-800">1. Tóm Tắt Lý Thuyết Chuyên Đề</h3>
+                            <p className="text-xs text-slate-500 leading-relaxed">
+                                Đầy đủ mục tiêu, khái niệm, thuật ngữ kỹ thuật, công thức, bảng so sánh và sơ đồ hệ thống từ SGK Thiết kế & Công nghệ 10.
+                            </p>
+                            <span className="inline-block text-xs text-blue-600 font-semibold">Khám phá lý thuyết &rarr;</span>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-3 hover:border-indigo-400 transition cursor-pointer" onClick={() => setActiveTab("mcq")}>
+                            <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold">
+                                <i className="fa-solid fa-vial-circle-check"></i>
+                            </div>
+                            <h3 className="font-bold text-lg text-slate-800">2. Luyện Trắc Nghiệm Gợi Mở AI</h3>
+                            <p className="text-xs text-slate-500 leading-relaxed">
+                                Ngân hàng câu hỏi phân cấp 4 mức độ. AI dẫn dắt tư duy Socratic khi trả lời sai, gợi ý từ nhẹ đến chi tiết.
+                            </p>
+                            <span className="inline-block text-xs text-indigo-600 font-semibold">Bắt đầu luyện tập &rarr;</span>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-3 hover:border-teal-400 transition cursor-pointer" onClick={() => setActiveTab("essay")}>
+                            <div className="w-12 h-12 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-xl font-bold">
+                                <i className="fa-solid fa-microscope"></i>
+                            </div>
+                            <h3 className="font-bold text-lg text-slate-800">3. Luyện Bài Tập Tự Luận HSG</h3>
+                            <p className="text-xs text-slate-500 leading-relaxed">
+                                Đề thi phân tích nguyên lý, thiết kế sơ đồ, tính toán đại lượng kỹ thuật. AI chấm bài và phân tích ưu/nhược điểm theo Rubric.
+                            </p>
+                            <span className="inline-block text-xs text-teal-600 font-semibold">Làm bài tự luận &rarr;</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // 2. PHÂN HỆ TÓM TẮT LÝ THUYẾT
+        // ==========================================
+        function TheoryTab({ theoryData, user, setUser }) {
+            const [selectedLesson, setSelectedLesson] = useState(theoryData[0]?.lessons[0]);
+            const [searchTerm, setSearchTerm] = useState("");
+
+            const isBookmarked = user.bookmarks?.includes(selectedLesson?.id);
+
+            const toggleBookmark = (id) => {
+                setUser(prev => {
+                    const bookmarks = prev.bookmarks || [];
+                    const updated = bookmarks.includes(id) ? bookmarks.filter(b => b !== id) : [...bookmarks, id];
+                    return { ...prev, bookmarks: updated };
+                });
+            };
+
+            return (
+                <div className="grid md:grid-cols-12 gap-6">
+                    {/* Sidebar Danh sách Bài học */}
+                    <div className="md:col-span-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <div className="relative">
+                            <i className="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+                            <input
+                                type="text"
+                                placeholder="Tìm kiếm bài học, thuật ngữ..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-9 pr-3 py-2 bg-slate-100 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        <div className="space-y-4 max-h-[600px] overflow-y-auto custom-scrollbar">
+                            {theoryData.map(chapter => (
+                                <div key={chapter.id} className="space-y-2">
+                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider px-2">{chapter.title}</h4>
+                                    <div className="space-y-1">
+                                        {chapter.lessons
+                                            .filter(l => l.title.toLowerCase().includes(searchTerm.toLowerCase()) || l.keyKnowledge.toLowerCase().includes(searchTerm.toLowerCase()))
+                                            .map(lesson => (
+                                                <button
+                                                    key={lesson.id}
+                                                    onClick={() => setSelectedLesson(lesson)}
+                                                    className={`w-full text-left p-3 rounded-xl text-xs font-medium transition flex items-center justify-between ${selectedLesson?.id === lesson.id ? "bg-blue-50 text-blue-700 border border-blue-200 font-semibold" : "hover:bg-slate-50 text-slate-700"}`}
+                                                >
+                                                    <span className="truncate">{lesson.title}</span>
+                                                    {user.bookmarks?.includes(lesson.id) && (
+                                                        <i className="fa-solid fa-bookmark text-amber-500 text-xs"></i>
+                                                    )}
+                                                </button>
+                                            ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Content Detail Area */}
+                    <div className="md:col-span-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                        {selectedLesson ? (
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                                    <div>
+                                        <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">Chuyên đề trọng tâm</span>
+                                        <h2 className="text-xl font-bold text-slate-800 mt-1">{selectedLesson.title}</h2>
+                                    </div>
+                                    <button
+                                        onClick={() => toggleBookmark(selectedLesson.id)}
+                                        className={`p-2.5 rounded-xl border text-xs font-semibold transition flex items-center space-x-2 ${isBookmarked ? "bg-amber-50 border-amber-300 text-amber-600" : "border-slate-200 text-slate-600 hover:bg-slate-50"}`}
+                                    >
+                                        <i className={`fa-${isBookmarked ? "solid" : "regular"} fa-bookmark`}></i>
+                                        <span>{isBookmarked ? "Đã lưu" : "Lưu bài học"}</span>
+                                    </button>
+                                </div>
+
+                                {/* Mục tiêu học tập */}
+                                <div className="bg-slate-50 p-4 rounded-xl border-l-4 border-blue-500 space-y-1">
+                                    <h4 className="text-xs font-bold text-blue-800 uppercase tracking-wider flex items-center space-x-2">
+                                        <i className="fa-solid fa-bullseye"></i><span>Mục tiêu bài học HSG</span>
+                                    </h4>
+                                    <p className="text-xs text-slate-700 leading-relaxed">{selectedLesson.objectives}</p>
+                                </div>
+
+                                {/* Kiến thức trọng tâm */}
+                                <div className="space-y-2">
+                                    <h4 className="font-bold text-sm text-slate-800 flex items-center space-x-2">
+                                        <i className="fa-solid fa-key text-amber-500"></i><span>Kiến thức cốt lõi</span>
+                                    </h4>
+                                    <p className="text-xs text-slate-600 leading-relaxed bg-amber-50/50 p-3 rounded-xl border border-amber-100">{selectedLesson.keyKnowledge}</p>
+                                </div>
+
+                                {/* Khái niệm & Thuật ngữ */}
+                                {selectedLesson.terms && (
+                                    <div className="space-y-3">
+                                        <h4 className="font-bold text-sm text-slate-800">Thuật ngữ & Khái niệm kỹ thuật</h4>
+                                        <div className="grid sm:grid-cols-2 gap-3">
+                                            {selectedLesson.terms.map((t, idx) => (
+                                                <div key={idx} className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 space-y-1">
+                                                    <p className="text-xs font-bold text-blue-700">{t.term}</p>
+                                                    <p className="text-[11px] text-slate-600">{t.desc}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Bảng so sánh dễ nhầm lẫn */}
+                                {selectedLesson.comparisons && (
+                                    <div className="space-y-3">
+                                        <h4 className="font-bold text-sm text-slate-800">Bảng phân tích & So sánh khái niệm dễ nhầm lẫn</h4>
+                                        <div className="overflow-x-auto">
+                                            <table className="w-full text-xs text-left border-collapse border border-slate-200">
+                                                <thead>
+                                                    <tr className="bg-slate-100 text-slate-700">
+                                                        <th className="p-2 border border-slate-200">Tiêu chí</th>
+                                                        {Object.keys(selectedLesson.comparisons[0]).filter(k => k !== 'aspect').map((k, i) => (
+                                                            <th key={i} className="p-2 border border-slate-200 capitalize">{k}</th>
+                                                        ))}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {selectedLesson.comparisons.map((row, idx) => (
+                                                        <tr key={idx} className="hover:bg-slate-50">
+                                                            <td className="p-2 font-semibold border border-slate-200 bg-slate-50">{row.aspect}</td>
+                                                            {Object.entries(row).filter(([k]) => k !== 'aspect').map(([k, val], i) => (
+                                                                <td key={i} className="p-2 border border-slate-200">{val}</td>
+                                                            ))}
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Các lỗi sai thường gặp */}
+                                {selectedLesson.pitfalls && (
+                                    <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 space-y-1">
+                                        <h4 className="text-xs font-bold text-rose-700 flex items-center space-x-2">
+                                            <i className="fa-solid fa-triangle-exclamation"></i><span>Lỗi sai học sinh thường mắc trong kỳ thi</span>
+                                        </h4>
+                                        <p className="text-xs text-rose-800">{selectedLesson.pitfalls}</p>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <p className="text-slate-400 text-xs">Vui lòng chọn bài học ở danh sách bên trái.</p>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // 3. PHÂN HỆ LUYỆN TRẮC NGHIỆM GỢI MỞ AI (SOCRATIC)
+        // ==========================================
+        function McqPracticeTab({ mcqQuestions, user, setUser, apiKey }) {
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [selectedOpt, setSelectedOpt] = useState(null);
+            const [isSubmitted, setIsSubmitted] = useState(false);
+            const [hintLevel, setHintLevel] = useState(0); // 0: None, 1: Hint 1, 2: Hint 2, 3: Full Rationale
+            const [aiChatLog, setAiChatLog] = useState([]);
+            const [loadingAi, setLoadingAi] = useState(false);
+
+            const q = mcqQuestions[currentIndex];
+
+            const handleSelectOption = (idx) => {
+                if (isSubmitted && selectedOpt === q.correctIndex) return; // Đã trả lời đúng
+                setSelectedOpt(idx);
+            };
+
+            const handleSubmitAnswer = () => {
+                if (selectedOpt === null) return alert("Vui lòng chọn 1 phương án!");
+
+                const isCorrect = selectedOpt === q.correctIndex;
+                setIsSubmitted(true);
+
+                if (isCorrect) {
+                    // Cộng điểm
+                    setUser(prev => ({
+                        ...prev,
+                        score: prev.score + q.points,
+                        completedCount: prev.completedCount + 1,
+                        correctCount: prev.correctCount + 1
+                    }));
+                } else {
+                    // Trả lời sai -> Kích hoạt gợi mở AI Socratic Cấp độ 1
+                    setHintLevel(1);
+                    setAiChatLog([
+                        { role: "ai", text: `Chưa chính xác rồi em nhé! Hãy cùng phân tích lại. ${q.hint1} Em thử suy nghĩ lại xem phương án nào hợp lý nhất?` }
+                    ]);
+                    setUser(prev => ({
+                        ...prev,
+                        completedCount: prev.completedCount + 1
+                    }));
+                }
+            };
+
+            const handleRequestMoreHint = () => {
+                if (hintLevel === 1) {
+                    setHintLevel(2);
+                    setAiChatLog(prev => [
+                        ...prev,
+                        { role: "ai", text: `Gợi ý cấp độ 2: ${q.hint2}. Đừng quên chú ý mối liên hệ giữa các đại lượng kỹ thuật nhé!` }
+                    ]);
+                } else if (hintLevel === 2) {
+                    setHintLevel(3);
+                    setAiChatLog(prev => [
+                        ...prev,
+                        { role: "ai", text: `Lời giải thích đầy đủ: ${q.rationale}` }
+                    ]);
+                }
+            };
+
+            const handleNextQuestion = () => {
+                setSelectedOpt(null);
+                setIsSubmitted(false);
+                setHintLevel(0);
+                setAiChatLog([]);
+                if (currentIndex < mcqQuestions.length - 1) {
+                    setCurrentIndex(currentIndex + 1);
+                } else {
+                    alert("Bạn đã hoàn thành lượt luyện tập trắc nghiệm!");
+                    setCurrentIndex(0);
+                }
+            };
+
+            if (!q) return <p className="text-slate-500 text-xs">Chưa có câu hỏi trắc nghiệm.</p>;
+
+            return (
+                <div className="max-w-4xl mx-auto space-y-6">
+                    {/* Header Tiến trình */}
+                    <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                            <span className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">
+                                {currentIndex + 1}/{mcqQuestions.length}
+                            </span>
+                            <div>
+                                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{q.difficulty} • {q.points} điểm</span>
+                                <p className="text-xs font-medium text-slate-700">{q.source}</p>
+                            </div>
+                        </div>
+
+                        <div className="flex space-x-2">
+                            <button onClick={handleNextQuestion} className="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-4 py-2 rounded-xl transition">
+                                Bỏ qua / Câu tiếp &rarr;
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Câu hỏi Main Box */}
+                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                        <h3 className="text-sm md:text-base font-bold text-slate-800 leading-relaxed">
+                            {q.question}
+                        </h3>
+
+                        {/* Options list */}
+                        <div className="space-y-3">
+                            {q.options.map((opt, idx) => {
+                                let style = "border-slate-200 hover:border-blue-400 bg-white text-slate-700";
+                                if (selectedOpt === idx) {
+                                    style = "border-blue-500 bg-blue-50 text-blue-800 font-semibold shadow-sm";
+                                }
+                                if (isSubmitted) {
+                                    if (idx === q.correctIndex) {
+                                        style = "border-teal-500 bg-teal-50 text-teal-800 font-semibold ring-2 ring-teal-400";
+                                    } else if (selectedOpt === idx && selectedOpt !== q.correctIndex) {
+                                        style = "border-rose-400 bg-rose-50 text-rose-800 font-medium";
+                                    }
+                                }
+
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleSelectOption(idx)}
+                                        className={`w-full text-left p-4 rounded-xl border text-xs leading-relaxed transition flex items-start space-x-3 ${style}`}
+                                    >
+                                        <span className="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-[11px] font-bold shrink-0 mt-0.5">
+                                            {String.fromCharCode(65 + idx)}
+                                        </span>
+                                        <span className="flex-1">{opt}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* Submit Action */}
+                        {!isSubmitted && (
+                            <button
+                                onClick={handleSubmitAnswer}
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs"
+                            >
+                                Xác nhận câu trả lời
+                            </button>
+                        )}
+
+                        {/* Khung Phản hồi AI Socratic khi Trả Lời Sai hoặc Đúng */}
+                        {isSubmitted && (
+                            <div className="space-y-4 border-t border-slate-100 pt-4">
+                                {selectedOpt === q.correctIndex ? (
+                                    <div className="p-4 rounded-xl bg-teal-50 border border-teal-200 space-y-2">
+                                        <div className="flex items-center space-x-2 text-teal-700 font-bold text-xs">
+                                            <i className="fa-solid fa-circle-check text-base"></i>
+                                            <span>Chính xác! Bạn nhận được +{q.points} điểm.</span>
+                                        </div>
+                                        <p className="text-xs text-teal-800 leading-relaxed">{q.rationale}</p>
+                                    </div>
+                                ) : (
+                                    <div className="p-4 rounded-xl bg-amber-50/80 border border-amber-200 space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center space-x-2 text-amber-800 font-bold text-xs">
+                                                <i className="fa-solid fa-robot text-base text-amber-600"></i>
+                                                <span>TRỢ LÝ AI HSG – Hướng dẫn tự suy luận</span>
+                                            </div>
+                                            <span className="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">Gợi mở Cấp {hintLevel}/3</span>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            {aiChatLog.map((msg, i) => (
+                                                <div key={i} className="text-xs text-slate-700 leading-relaxed bg-white p-3 rounded-lg border border-amber-100 shadow-sm">
+                                                    {msg.text}
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {hintLevel < 3 && (
+                                            <div className="flex items-center justify-between pt-1">
+                                                <button
+                                                    onClick={handleRequestMoreHint}
+                                                    className="text-xs font-semibold text-amber-800 hover:text-amber-900 underline flex items-center space-x-1"
+                                                >
+                                                    <i className="fa-solid fa-lightbulb"></i>
+                                                    <span>{hintLevel === 1 ? "Tôi vẫn chưa hiểu, xin gợi ý cụ thể hơn" : "Xem đáp án và lời giải chi tiết"}</span>
+                                                </button>
+                                                <span className="text-[10px] text-slate-400">Thử chọn lại đáp án ở trên!</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                <button
+                                    onClick={handleNextQuestion}
+                                    className="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl shadow transition text-xs flex items-center justify-center space-x-2"
+                                >
+                                    <span>Chuyển sang câu tiếp theo</span>
+                                    <i className="fa-solid fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // 4. PHÂN HỆ LUYỆN BÀI TẬP TỰ LUẬN HSG
+        // ==========================================
+        function EssayPracticeTab({ essayQuestions, user, setUser, apiKey }) {
+            const [selectedQuestion, setSelectedQuestion] = useState(essayQuestions[0]);
+            const [studentAnswer, setStudentAnswer] = useState("");
+            const [aiEvaluation, setAiEvaluation] = useState(null);
+            const [isEvaluating, setIsEvaluating] = useState(false);
+            const [aiHint, setAiHint] = useState("");
+
+            const handleRequestHint = () => {
+                setAiHint("Gợi ý dàn ý: 1. Liệt kê đủ 3 phần tử chính (Đầu vào - Vi điều khiển - Đầu ra) + Cảm biến. 2. Phân tích nguyên lý bù chênh lệch nhiệt độ. 3. So sánh hiệu suất điện năng và độ bền cơ khí.");
+            };
+
+            const handleSubmitEssay = () => {
+                if (!studentAnswer.trim()) return alert("Vui lòng nhập lời giải của bạn trước khi nộp!");
+                setIsEvaluating(true);
+
+                // Giả lập hoặc gọi AI chấm bài tự luận dựa trên Rubric
+                setTimeout(() => {
+                    const hasKeywords = studentAnswer.toLowerCase().includes("mạch kín") || studentAnswer.toLowerCase().includes("phản hồi") || studentAnswer.toLowerCase().includes("cảm biến");
+                    const mockScore = hasKeywords ? 17 : 11;
+
+                    const evalResult = {
+                        score: mockScore,
+                        maxScore: selectedQuestion.maxScore,
+                        correctPoints: [
+                            "Đã nhận diện đúng bản chất hệ thống kỹ thuật.",
+                            "Nêu được cơ chế phản hồi nhiệt độ từ cảm biến."
+                        ],
+                        missingPoints: [
+                            hasKeywords ? "Cần phân tích sâu hơn về tiết kiệm điện năng của công nghệ Inverter." : "Thiếu giải thích cơ chế so sánh tín hiệu phản hồi để điều chỉnh tần số điện thế."
+                        ],
+                        detailedFeedback: "Bài làm trình bày khá logic. Để đạt điểm tối đa kỳ thi HSG, em nên sử dụng thêm các từ khóa chuyên môn như 'độ chênh lệch tín hiệu đặt', 'vi điều khiển tự động điều tiết'."
+                    };
+
+                    setAiEvaluation(evalResult);
+                    setIsEvaluating(false);
+
+                    // Tích lũy điểm
+                    setUser(prev => ({
+                        ...prev,
+                        score: prev.score + mockScore,
+                        completedCount: prev.completedCount + 1
+                    }));
+                }, 1500);
+            };
+
+            return (
+                <div className="grid md:grid-cols-12 gap-6 max-w-6xl mx-auto">
+                    {/* List đề thi */}
+                    <div className="md:col-span-4 bg-white p-4 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                        <h3 className="font-bold text-xs uppercase text-slate-400 tracking-wider">Ngân hàng Đề Tự Luận HSG</h3>
+                        <div className="space-y-2">
+                            {essayQuestions.map(eq => (
+                                <button
+                                    key={eq.id}
+                                    onClick={() => { setSelectedQuestion(eq); setAiEvaluation(null); setStudentAnswer(""); setAiHint(""); }}
+                                    className={`w-full text-left p-3 rounded-xl border text-xs transition ${selectedQuestion?.id === eq.id ? "border-teal-500 bg-teal-50/60 font-semibold text-teal-900" : "border-slate-200 hover:bg-slate-50"}`}
+                                >
+                                    <p className="font-bold truncate">{eq.title}</p>
+                                    <span className="text-[10px] text-slate-500">{eq.difficulty} • Thang điểm {eq.maxScore}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Workspace */}
+                    <div className="md:col-span-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                        {selectedQuestion && (
+                            <div className="space-y-4">
+                                <div className="border-b border-slate-100 pb-3">
+                                    <span className="text-[10px] bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded-full">{selectedQuestion.difficulty}</span>
+                                    <h2 className="text-lg font-bold text-slate-800 mt-1">{selectedQuestion.title}</h2>
+                                </div>
+
+                                {/* Đề bài */}
+                                <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                                    <h4 className="text-xs font-bold text-slate-700">Đề bài & Yêu cầu kỹ thuật:</h4>
+                                    <p className="text-xs text-slate-600 whitespace-pre-line leading-relaxed">{selectedQuestion.prompt}</p>
+                                </div>
+
+                                {/* Thang điểm Rubric */}
+                                <div className="space-y-2">
+                                    <h4 className="text-xs font-bold text-slate-700">Thang điểm & Tiêu chí đánh giá (Rubric):</h4>
+                                    <div className="space-y-1">
+                                        {selectedQuestion.rubric.map((r, i) => (
+                                            <div key={i} className="flex justify-between items-center text-[11px] p-2 rounded bg-slate-100/70">
+                                                <span className="text-slate-600">{r.criterion}</span>
+                                                <span className="font-bold text-slate-800">{r.score}đ</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Area Lời giải */}
+                                <div className="space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <label className="text-xs font-bold text-slate-700">Bài làm của học sinh:</label>
+                                        <button onClick={handleRequestHint} className="text-xs text-amber-600 hover:underline flex items-center space-x-1">
+                                            <i className="fa-solid fa-lightbulb"></i><span>Xin AI gợi ý dàn ý</span>
+                                        </button>
+                                    </div>
+
+                                    {aiHint && (
+                                        <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800">
+                                            {aiHint}
+                                        </div>
+                                    )}
+
+                                    <textarea
+                                        rows={6}
+                                        placeholder="Trình bày chi tiết lời giải, lập luận, công thức và các bước phân tích kỹ thuật của em..."
+                                        value={studentAnswer}
+                                        onChange={(e) => setStudentAnswer(e.target.value)}
+                                        className="w-full p-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 font-mono"
+                                    ></textarea>
+                                </div>
+
+                                <button
+                                    onClick={handleSubmitEssay}
+                                    disabled={isEvaluating}
+                                    className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl transition text-xs shadow-md flex items-center justify-center space-x-2"
+                                >
+                                    {isEvaluating ? (
+                                        <span>AI đang chấm bài & phân tích...</span>
+                                    ) : (
+                                        <>
+                                            <i className="fa-solid fa-paper-plane"></i>
+                                            <span>Nộp Bài & Nhận Đánh Giá AI</span>
+                                        </>
+                                    )}
+                                </button>
+
+                                {/* Kết quả Đánh giá AI */}
+                                {aiEvaluation && (
+                                    <div className="p-5 rounded-2xl bg-slate-900 text-white space-y-4">
+                                        <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                                            <span className="font-bold text-teal-400 text-sm">Kết quả Đánh giá tự động từ Gia Sư AI</span>
+                                            <span className="text-lg font-extrabold text-amber-400">{aiEvaluation.score}/{aiEvaluation.maxScore} điểm</span>
+                                        </div>
+
+                                        <div className="space-y-2 text-xs">
+                                            <p className="font-semibold text-teal-300">Ý làm đúng:</p>
+                                            <ul className="list-disc pl-4 space-y-1 text-slate-300">
+                                                {aiEvaluation.correctPoints.map((cp, i) => <li key={i}>{cp}</li>)}
+                                            </ul>
+
+                                            <p className="font-semibold text-rose-300 pt-2">Ý còn thiếu / Cần hoàn thiện:</p>
+                                            <ul className="list-disc pl-4 space-y-1 text-slate-300">
+                                                {aiEvaluation.missingPoints.map((mp, i) => <li key={i}>{mp}</li>)}
+                                            </ul>
+
+                                            <p className="font-semibold text-amber-300 pt-2">Nhận xét chi tiết cải thiện:</p>
+                                            <p className="text-slate-300 leading-relaxed bg-slate-800 p-3 rounded-xl border border-slate-700">{aiEvaluation.detailedFeedback}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // 5. PHÂN HỆ TRỢ LÝ AI HSG (CHATBOT)
+        // ==========================================
+        function AiChatTab({ apiKey, user, theoryData }) {
+            const [messages, setMessages] = useState([
+                { role: "assistant", text: `Chào ${user.name || "bạn"}! Thầy là TRỢ LÝ HSG – NGƯỜI BẠN ĐỒNG HÀNH. Em có câu hỏi hoặc khái niệm kỹ thuật nào cần giải đáp không?` }
+            ]);
+            const [inputMsg, setInputMsg] = useState("");
+            const [loading, setLoading] = useState(false);
+
+            const handleSend = async (e) => {
+                e.preventDefault();
+                if (!inputMsg.trim()) return;
+
+                const userText = inputMsg;
+                setMessages(prev => [...prev, { role: "user", text: userText }]);
+                setInputMsg("");
+                setLoading(true);
+
+                // Nếu có API Key sẽ gọi Gemini API, nếu không sẽ dùng rule engine trả lời từ database
+                if (apiKey) {
+                    try {
+                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [{ text: `Bạn là gia sư AI môn Công nghệ THPT ôn thi học sinh giỏi. Hãy gợi mở tư duy cho học sinh, không cho lời giải trực tiếp ngay lập tức nếu hỏi bài tập. Câu hỏi của học sinh: ${userText}` }]
+                                }]
+                            })
+                        });
+                        const data = await res.json();
+                        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Xin lỗi em, hiện tại kết nối AI đang gián đoạn.";
+                        setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+                    } catch (err) {
+                        setMessages(prev => [...prev, { role: "assistant", text: "Lỗi kết nối API Key. Thầy sẽ giải đáp bằng dữ liệu tri thức tích hợp sẵn." }]);
+                    }
+                } else {
+                    // Smart Offline Simulation
+                    setTimeout(() => {
+                        let reply = "Để trả lời câu hỏi này, em hãy nhớ lại nguyên lý: Kỹ thuật ứng dụng tri thức khoa học để tạo sản phẩm. Em muốn tìm hiểu sâu hơn ở Bài học nào trong Chương I hay Chương II?";
+                        if (userText.toLowerCase().includes("mạch kín") || userText.toLowerCase().includes("phản hồi")) {
+                            reply = "Trong hệ thống mạch kín, điểm cốt lõi là 'Tín hiệu phản hồi' (Feedback). Tín hiệu đầu ra được đo và truyền ngược lại bộ xử lý để tự động điều chỉnh. Em có thể lấy ví dụ cụ thể về bàn là tự động ngắt điện không?";
+                        } else if (userText.toLowerCase().includes("cad") || userText.toLowerCase().includes("cnc")) {
+                            reply = "Chuỗi CAD/CAM/CNC kết nối từ Thiết kế 3D (CAD) -> Lập quy trình & đường chạy dao (CAM) -> Máy gia công tự động (CNC). Em đã nắm rõ vai trò của từng khâu chưa?";
+                        }
+                        setMessages(prev => [...prev, { role: "assistant", text: reply }]);
+                        setLoading(false);
+                    }, 1000);
+                }
+            };
+
+            return (
+                <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[650px]">
+                    {/* Chat Header */}
+                    <div className="p-4 border-b border-slate-100 bg-gradient-to-r from-blue-700 to-indigo-700 text-white rounded-t-2xl flex items-center space-x-3">
+                        <div className="w-10 h-10 rounded-full bg-amber-400 text-slate-900 font-bold flex items-center justify-center">
+                            <i className="fa-solid fa-robot text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-sm">TRỢ LÝ HSG – NGƯỜI BẠN ĐỒNG HÀNH</h3>
+                            <p className="text-[11px] text-blue-100">Gia sư AI Chuyên Sâu Môn Công Nghệ THPT</p>
+                        </div>
+                    </div>
+
+                    {/* Messages Container */}
+                    <div className="flex-1 p-4 overflow-y-auto space-y-4 custom-scrollbar bg-slate-50/50">
+                        {messages.map((m, idx) => (
+                            <div key={idx} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                                <div className={`max-w-[80%] p-3.5 rounded-2xl text-xs leading-relaxed ${m.role === "user" ? "bg-blue-600 text-white rounded-br-none" : "bg-white text-slate-800 border border-slate-200/80 shadow-sm rounded-bl-none space-y-1"}`}>
+                                    {m.role === "assistant" && (
+                                        <span className="text-[10px] font-bold text-blue-600 block mb-1">
+                                            <i className="fa-solid fa-sparkles mr-1"></i>Trợ lý AI HSG
+                                        </span>
+                                    )}
+                                    <p className="whitespace-pre-line">{m.text}</p>
+                                </div>
+                            </div>
+                        ))}
+                        {loading && (
+                            <div className="flex justify-start">
+                                <div className="bg-white p-3 rounded-2xl border border-slate-200 text-xs text-slate-400 animate-pulse">
+                                    AI đang suy nghĩ lời gợi mở...
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Input Form */}
+                    <form onSubmit={handleSend} className="p-3 border-t border-slate-200 bg-white rounded-b-2xl flex items-center space-x-2">
+                        <input
+                            type="text"
+                            placeholder="Đặt câu hỏi về kiến thức, công thức hoặc dạng bài tập..."
+                            value={inputMsg}
+                            onChange={(e) => setInputMsg(e.target.value)}
+                            className="flex-1 p-3 bg-slate-100 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-xl transition shadow text-xs">
+                            <i className="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // 6. PHÂN HỆ BẢNG XẾP HẠNG & THỐNG KÊ
+        // ==========================================
+        function LeaderboardTab({ leaderboard, user }) {
+            const sortedLeaderboard = useMemo(() => {
+                return [...leaderboard].sort((a, b) => b.points - a.points || b.accuracy - a.accuracy);
+            }, [leaderboard]);
+
+            return (
+                <div className="max-w-4xl mx-auto space-y-6">
+                    <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-6 rounded-2xl text-white shadow-md flex items-center justify-between">
+                        <div>
+                            <h2 className="text-xl font-extrabold">BẢNG XẾP HẠNG HỌC SINH GIỎI</h2>
+                            <p className="text-xs text-amber-100 mt-1">Xếp hạng công bằng dựa trên Tổng điểm tích lũy & Tỷ lệ chính xác</p>
+                        </div>
+                        <i className="fa-solid fa-trophy text-5xl text-amber-200 opacity-80"></i>
+                    </div>
+
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <table className="w-full text-xs text-left">
+                            <thead className="bg-slate-100 text-slate-600 font-bold uppercase tracking-wider">
+                                <tr>
+                                    <th className="p-4 text-center">Thứ hạng</th>
+                                    <th className="p-4">Học sinh</th>
+                                    <th className="p-4">Lớp / Trường</th>
+                                    <th className="p-4 text-center">Đã hoàn thành</th>
+                                    <th className="p-4 text-center">Tỷ lệ đúng</th>
+                                    <th className="p-4 text-right">Tổng điểm</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                                {sortedLeaderboard.map((item, idx) => {
+                                    const isMe = item.name === user.name;
+                                    let rankBadge = <span className="font-bold text-slate-600">{idx + 1}</span>;
+                                    if (idx === 0) rankBadge = <span className="w-6 h-6 rounded-full bg-amber-400 text-slate-900 font-extrabold flex items-center justify-center mx-auto shadow">1</span>;
+                                    if (idx === 1) rankBadge = <span className="w-6 h-6 rounded-full bg-slate-300 text-slate-800 font-extrabold flex items-center justify-center mx-auto shadow">2</span>;
+                                    if (idx === 2) rankBadge = <span className="w-6 h-6 rounded-full bg-amber-700 text-white font-extrabold flex items-center justify-center mx-auto shadow">3</span>;
+
+                                    return (
+                                        <tr key={item.id} className={isMe ? "bg-amber-50/80 font-bold text-slate-900" : "hover:bg-slate-50 text-slate-700"}>
+                                            <td className="p-4 text-center">{rankBadge}</td>
+                                            <td className="p-4 flex items-center space-x-2">
+                                                <span className="font-semibold">{item.name}</span>
+                                                {isMe && <span className="text-[10px] bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded font-bold">Bạn</span>}
+                                            </td>
+                                            <td className="p-4 text-slate-500">{item.class || "THPT"}</td>
+                                            <td className="p-4 text-center">{item.completedCount} câu</td>
+                                            <td className="p-4 text-center">{item.accuracy}%</td>
+                                            <td className="p-4 text-right font-extrabold text-blue-700">{item.points} đ</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        }
+
+        // ==========================================
+        // 7. PHÂN HỆ QUẢN TRỊ GIÁO VIÊN
+        // ==========================================
+        function AdminTab({ mcqQuestions, setMcqQuestions, essayQuestions, setEssayQuestions, theoryData, setTheoryData, leaderboard, setApiKey, currentApiKey }) {
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+            const [passInput, setPassInput] = useState("");
+            const [tempKey, setTempKey] = useState(currentApiKey);
+
+            // Modal thêm câu hỏi trắc nghiệm
+            const [newMcq, setNewMcq] = useState({
+                question: "", options: ["", "", "", ""], correctIndex: 0, points: 5, difficulty: "Thông hiểu", source: "Tài liệu Giáo viên", hint1: "", hint2: "", rationale: ""
+            });
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                if (passInput === "admin123" || passInput === "giaovien") {
+                    setIsAuthenticated(true);
+                } else {
+                    alert("Mật khẩu quản trị không đúng! (Gợi ý: giaovien)");
+                }
+            };
+
+            const handleAddMcq = (e) => {
+                e.preventDefault();
+                if (!newMcq.question || newMcq.options.some(o => !o.trim())) return alert("Vui lòng điền đầy đủ câu hỏi và 4 phương án!");
+
+                const created = { ...newMcq, id: 'q_' + Date.now(), topicId: 'b1' };
+                setMcqQuestions(prev => [...prev, created]);
+                alert("Đã thêm câu hỏi trắc nghiệm mới thành công!");
+                setNewMcq({ question: "", options: ["", "", "", ""], correctIndex: 0, points: 5, difficulty: "Thông hiểu", source: "Tài liệu Giáo viên", hint1: "", hint2: "", rationale: "" });
+            };
+
+            if (!isAuthenticated) {
+                return (
+                    <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                        <div className="text-center space-y-1">
+                            <div className="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-2xl flex items-center justify-center mx-auto text-xl font-bold">
+                                <i className="fa-solid fa-lock"></i>
+                            </div>
+                            <h3 className="font-bold text-base text-slate-800">Đăng Nhập Trang Quản Trị Giáo Viên</h3>
+                            <p className="text-xs text-slate-500">Quản lý câu hỏi, tài liệu và cấu hình hệ thống AI</p>
+                        </div>
+
+                        <form onSubmit={handleLogin} className="space-y-3">
+                            <input
+                                type="password"
+                                placeholder="Nhập mật khẩu giáo viên..."
+                                value={passInput}
+                                onChange={(e) => setPassInput(e.target.value)}
+                                className="w-full p-3 bg-slate-100 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            />
+                            <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition text-xs shadow">
+                                Đăng Nhập Quản Trị
+                            </button>
+                        </form>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="max-w-5xl mx-auto space-y-8">
+                    <div className="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200">
+                        <div>
+                            <h2 className="font-bold text-base text-slate-800">BẢNG QUẢN TRỊ GIÁO VIÊN</h2>
+                            <p className="text-xs text-slate-500">Quản lý ngân hàng đề, theo dõi lớp học & Cấu hình AI Gemini</p>
+                        </div>
+                        <button onClick={() => setIsAuthenticated(false)} className="text-xs bg-rose-50 text-rose-600 font-semibold px-3 py-1.5 rounded-lg">
+                            Đăng xuất Quản trị
+                        </button>
+                    </div>
+
+                    {/* Configuration AI Key */}
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-3">
+                        <h3 className="font-bold text-sm text-slate-800 flex items-center space-x-2">
+                            <i className="fa-solid fa-key text-amber-500"></i><span>Cấu hình API Key AI (Google Gemini API)</span>
+                        </h3>
+                        <p className="text-xs text-slate-500">Nhập API Key để kích hoạt khả năng phản hồi AI thực tế cho khung chat và chấm bài tự luận nâng cao.</p>
+                        <div className="flex space-x-2">
+                            <input
+                                type="password"
+                                placeholder="AIzaSy..."
+                                value={tempKey}
+                                onChange={(e) => setTempKey(e.target.value)}
+                                className="flex-1 p-2.5 bg-slate-100 rounded-xl text-xs font-mono"
+                            />
+                            <button onClick={() => setApiKey(tempKey)} className="bg-slate-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl">
+                                Lưu API Key
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Thêm câu hỏi Trắc nghiệm */}
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
+                        <h3 className="font-bold text-sm text-slate-800">Thêm Câu Hỏi Trắc Nghiệm Mới</h3>
+
+                        <form onSubmit={handleAddMcq} className="space-y-4">
+                            <div>
+                                <label className="text-xs font-bold text-slate-700 block mb-1">Nội dung câu hỏi:</label>
+                                <textarea
+                                    rows={2}
+                                    placeholder="Nhập nội dung câu hỏi trắc nghiệm..."
+                                    value={newMcq.question}
+                                    onChange={(e) => setNewMcq({ ...newMcq, question: e.target.value })}
+                                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs"
+                                ></textarea>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                {newMcq.options.map((opt, i) => (
+                                    <div key={i}>
+                                        <label className="text-[11px] font-semibold text-slate-600 block mb-1">Phương án {String.fromCharCode(65 + i)}:</label>
+                                        <input
+                                            type="text"
+                                            value={opt}
+                                            onChange={(e) => {
+                                                const opts = [...newMcq.options];
+                                                opts[i] = e.target.value;
+                                                setNewMcq({ ...newMcq, options: opts });
+                                            }}
+                                            className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label className="text-[11px] font-semibold text-slate-600 block mb-1">Đáp án đúng:</label>
+                                    <select
+                                        value={newMcq.correctIndex}
+                                        onChange={(e) => setNewMcq({ ...newMcq, correctIndex: parseInt(e.target.value) })}
+                                        className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-bold"
+                                    >
+                                        <option value={0}>Phương án A</option>
+                                        <option value={1}>Phương án B</option>
+                                        <option value={2}>Phương án C</option>
+                                        <option value={3}>Phương án D</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-[11px] font-semibold text-slate-600 block mb-1">Mức độ khó:</label>
+                                    <select
+                                        value={newMcq.difficulty}
+                                        onChange={(e) => setNewMcq({ ...newMcq, difficulty: e.target.value })}
+                                        className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+                                    >
+                                        <option value="Nhận biết">Nhận biết</option>
+                                        <option value="Thông hiểu">Thông hiểu</option>
+                                        <option value="Vận dụng">Vận dụng</option>
+                                        <option value="Vận dụng cao">Vận dụng cao</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-[11px] font-semibold text-slate-600 block mb-1">Số điểm:</label>
+                                    <input
+                                        type="number"
+                                        value={newMcq.points}
+                                        onChange={(e) => setNewMcq({ ...newMcq, points: parseInt(e.target.value) })}
+                                        className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="text-[11px] font-semibold text-slate-600 block mb-1">Gợi ý cấp 1 (Dẫn dắt không lộ đáp án):</label>
+                                    <input
+                                        type="text"
+                                        value={newMcq.hint1}
+                                        onChange={(e) => setNewMcq({ ...newMcq, hint1: e.target.value })}
+                                        className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[11px] font-semibold text-slate-600 block mb-1">Lời giải thích chuẩn:</label>
+                                    <input
+                                        type="text"
+                                        value={newMcq.rationale}
+                                        onChange={(e) => setNewMcq({ ...newMcq, rationale: e.target.value })}
+                                        className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+                                    />
+                                </div>
+                            </div>
+
+                            <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition">
+                                + Lưu vào Ngân hàng Câu hỏi
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        // Mount React App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
+```eof
